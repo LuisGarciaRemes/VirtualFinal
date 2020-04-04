@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     internal Vector3 m_spawnPoint;
     private Vector3 m_velocity;
     private Rigidbody m_rb;
-    private float m_speed = 10;
+    [SerializeField] private float m_walkSpeed = 10;
     [SerializeField] GameObject m_RightHand;
     [SerializeField] GameObject m_LeftHand;
     private bool m_swingsword;
@@ -39,12 +39,13 @@ public class PlayerController : MonoBehaviour
         m_originalshieldRot = m_LeftHand.transform.rotation.eulerAngles.y;
         m_shieldRot = m_originalshieldRot;
         m_holdshield = false;
+        m_velocity = new Vector3(0.0f,0.0f,0.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_rb.velocity = m_velocity*m_speed;
+        m_rb.velocity = m_velocity*m_walkSpeed;
 
         if(m_swingsword)
         {
@@ -54,6 +55,11 @@ public class PlayerController : MonoBehaviour
         if (m_holdshield)
         {
             HoldShield();
+        }
+
+        if(m_velocity.magnitude != 0)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, -90.0f + Mathf.Atan2(m_velocity.z, -m_velocity.x) * 57.2958f, 0.0f);
         }
     }
 
@@ -98,15 +104,10 @@ public class PlayerController : MonoBehaviour
     private void OnRightTrigger()
     {
         Debug.Log("Right Trigger");
-        if (!m_swingsword)
+        if (!m_swingsword && (m_shieldRot != m_finalShieldRot))
         {
             m_swingsword = true;
             m_swingRot = m_finalSwordRot;
-        }
-
-        if(m_holdshield)
-        {
-            OnLeftTriggerRelease();
         }
     }
 
@@ -131,14 +132,14 @@ public class PlayerController : MonoBehaviour
 
     private void SwingSword()
     {
-        m_RightHand.transform.rotation = Quaternion.Lerp(m_RightHand.transform.rotation, Quaternion.Euler(m_RightHand.transform.rotation.eulerAngles.x,m_swingRot, m_RightHand.transform.rotation.eulerAngles.z),Time.deltaTime * m_swordSpeed);
+        m_RightHand.transform.localRotation = Quaternion.Lerp(m_RightHand.transform.localRotation, Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x,m_swingRot, m_RightHand.transform.localRotation.eulerAngles.z),Time.deltaTime * m_swordSpeed);
 
-        if (((m_RightHand.transform.rotation.eulerAngles.y <= m_originalSwordRot && m_RightHand.transform.rotation.eulerAngles.y >= m_originalSwordRot - 1) && m_swingRot == m_originalSwordRot))
+        if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_originalSwordRot && m_RightHand.transform.localRotation.eulerAngles.y >= m_originalSwordRot - 1) && m_swingRot == m_originalSwordRot))
         {
             m_swingsword = false;
         }
 
-        if(((m_RightHand.transform.rotation.eulerAngles.y <= m_finalSwordRot + 361 && m_RightHand.transform.rotation.eulerAngles.y >= m_finalSwordRot + 360) && m_swingRot == m_finalSwordRot))
+        if(((m_RightHand.transform.localRotation.eulerAngles.y <= m_finalSwordRot + 361 && m_RightHand.transform.localRotation.eulerAngles.y >= m_finalSwordRot + 360) && m_swingRot == m_finalSwordRot))
         {
             m_swingRot = m_originalSwordRot;
         }
@@ -146,9 +147,9 @@ public class PlayerController : MonoBehaviour
 
     private void HoldShield()
     {
-        m_LeftHand.transform.rotation = Quaternion.Lerp(m_LeftHand.transform.rotation, Quaternion.Euler(m_LeftHand.transform.rotation.eulerAngles.x, m_shieldRot, m_LeftHand.transform.rotation.eulerAngles.z), Time.deltaTime * m_shieldSpeed);
+        m_LeftHand.transform.localRotation = Quaternion.Lerp(m_LeftHand.transform.localRotation, Quaternion.Euler(m_LeftHand.transform.localRotation.eulerAngles.x, m_shieldRot, m_LeftHand.transform.localRotation.eulerAngles.z), Time.deltaTime * m_shieldSpeed);
 
-        if (((m_LeftHand.transform.rotation.eulerAngles.y <= m_originalshieldRot + 1 && m_LeftHand.transform.rotation.eulerAngles.y >= m_originalshieldRot) && m_shieldRot == m_originalshieldRot))
+        if (((m_LeftHand.transform.localRotation.eulerAngles.y <= m_originalshieldRot + 1 && m_LeftHand.transform.localRotation.eulerAngles.y >= m_originalshieldRot) && m_shieldRot == m_originalshieldRot))
         {
             m_holdshield = false;
         }
