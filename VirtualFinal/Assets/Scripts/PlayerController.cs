@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
-    private int m_playerID;
+    internal int m_playerID;
     internal Vector3 m_spawnPoint;
     private Vector3 m_velocity;
     private Rigidbody m_rb;
@@ -25,12 +25,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_swordSpeed = 20.0f;
     [SerializeField] private float m_shieldSpeed = 20.0f;
 
+    internal Camera m_camera;
+
     // Start is called before the first frame update
     void Start()
     {
         m_playerID = GameStateManager.instance.AddPlayer();
         transform.position = GameStateManager.instance.GetInitialSpawnPoint(m_playerID);
-        gameObject.GetComponent<PlayerInput>().camera = GameObject.Find("Player"+m_playerID+"Camera").GetComponent<Camera>();
+        m_camera = GameObject.Find("Player" + m_playerID + "Camera").GetComponent<Camera>();
+        gameObject.GetComponent<PlayerInput>().camera = m_camera;
         Debug.Log("Created Player " + m_playerID);
         m_rb = gameObject.GetComponent<Rigidbody>();
         m_swingsword = false;

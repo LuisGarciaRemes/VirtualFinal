@@ -7,7 +7,7 @@ public class GameStateManager : MonoBehaviour
 {
     private static GameStateManager m_instance;
     [SerializeField] private GameObject[] m_initSpawnPoints;
-    private int m_numPlayers = 0;
+    internal int m_numPlayers = 0;
     [SerializeField] private PlayerInputManager m_inputManager;
 
     public static GameStateManager instance
