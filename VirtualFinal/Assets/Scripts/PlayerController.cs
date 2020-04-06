@@ -5,27 +5,44 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-
+    //Gamestate
     internal int m_playerID;
     internal Vector3 m_spawnPoint;
+    internal Camera m_camera;
+
+    //Movement
     private Vector3 m_velocity;
     private Rigidbody m_rb;
     [SerializeField] private float m_walkSpeed = 10;
+    private bool isDashing = false;
+    private bool canDash = true;
+    [SerializeField] private float dashDist;
+    [SerializeField] private float dashSpeed = 20;
+    private Vector3 dashPos;
+    private float dashTimer = 0.0f;
+    [SerializeField] float dashDelay;
+
+    //Sword
     [SerializeField] GameObject m_RightHand;
-    [SerializeField] GameObject m_LeftHand;
     private bool m_swingsword;
     private float m_swingRot;
     private float m_originalSwordRot;
     [SerializeField] private float m_finalSwordRot;
+    [SerializeField] private float m_swordSpeed = 20.0f;
+
+    //Shield
+    [SerializeField] GameObject m_LeftHand;
     private bool m_holdshield;
     private float m_shieldRot;
     private float m_originalshieldRot;
     [SerializeField] private float m_finalShieldRot;
-
-    [SerializeField] private float m_swordSpeed = 20.0f;
     [SerializeField] private float m_shieldSpeed = 20.0f;
 
-    internal Camera m_camera;
+
+    //Equipment
+    private Equipment m_xEquipment = null;
+    private Equipment m_yEquipment = null;
+    internal Equipment m_tempEquipment = null;
 
     // Start is called before the first frame update
     void Start()
@@ -41,14 +58,36 @@ public class PlayerController : MonoBehaviour
         m_swingRot = m_originalSwordRot;
         m_originalshieldRot = m_LeftHand.transform.rotation.eulerAngles.y;
         m_shieldRot = m_originalshieldRot;
-        m_holdshield = false;
+        m_holdshield = true;
         m_velocity = new Vector3(0.0f,0.0f,0.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_rb.velocity = m_velocity*m_walkSpeed;
+        m_rb.velocity = m_velocity * m_walkSpeed;
+
+        if (isDashing)
+        {
+            transform.position = Vector3.MoveTowards(transform.position,dashPos,Time.deltaTime*dashSpeed);
+
+            if((dashPos - transform.position).magnitude <= .1)
+            {
+                isDashing = false;
+            }
+        }
+
+        if(!canDash)
+        {
+            if(dashTimer >= dashDelay)
+            {
+                canDash = true;
+            }
+            else
+            {
+                dashTimer += Time.deltaTime;
+            }
+        }
 
         if(m_swingsword)
         {
@@ -92,16 +131,43 @@ public class PlayerController : MonoBehaviour
     private void OnBButton()
     {
         Debug.Log("B");
+        if(canDash)
+        {
+            dashPos = transform.position + (transform.forward * dashDist);
+            isDashing = true;
+            canDash = false;
+            dashTimer = 0.0f;
+        }
     }
 
     private void OnYButton()
     {
         Debug.Log("Y");
+
+        if (m_tempEquipment != null)
+        {
+            m_yEquipment = m_tempEquipment;
+            m_tempEquipment = null;
+        }
+        else if (m_yEquipment != null)
+        {          
+            m_yEquipment.TriggerAbitily();
+        }
     }
 
     private void OnXButton()
     {
         Debug.Log("X");
+
+        if (m_tempEquipment != null)
+        {
+            m_xEquipment = m_tempEquipment;
+            m_tempEquipment = null;
+        }
+        else if(m_xEquipment != null)
+        {
+            m_xEquipment.TriggerAbitily();
+        }
     }
 
     private void OnRightTrigger()

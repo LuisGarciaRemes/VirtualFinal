@@ -36,6 +36,7 @@ public class GameStateManager : MonoBehaviour
 
     public int AddPlayer()
     {
+        gameObject.GetComponent<CameraManager>().SetToDisplay(m_numPlayers);
         m_numPlayers++;
 
         return m_numPlayers;

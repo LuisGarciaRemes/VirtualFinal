@@ -56,4 +56,9 @@ public class CameraManager : MonoBehaviour
     {
         m_position[i_playerID-1] = i_position;
     }
+
+    public void SetToDisplay(int i_cameraID)
+    {
+        m_playerCameras[i_cameraID].targetDisplay = 0;
+    }
 }
