@@ -134,6 +134,14 @@ public class PlayerController : MonoBehaviour
         if(canDash)
         {
             dashPos = transform.position + (transform.forward * dashDist);
+
+            RaycastHit info;
+
+            if(Physics.Raycast(transform.position, transform.forward, out info, dashDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+            {
+                dashPos = info.point;
+            }
+
             isDashing = true;
             canDash = false;
             dashTimer = 0.0f;
