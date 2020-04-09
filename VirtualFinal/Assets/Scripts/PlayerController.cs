@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class PlayerController : MonoBehaviour
     internal int m_playerID;
     internal Vector3 m_spawnPoint;
     internal Camera m_camera;
+    [SerializeField] private Material player2Mat;
+    [SerializeField] private Material player3Mat;
+    [SerializeField] private Material player4Mat;
+    [SerializeField] private GameObject PlayerIndicatorUI;
+    private GameObject playerHUD;
+
 
     //Movement
     private Vector3 m_velocity;
@@ -43,11 +50,12 @@ public class PlayerController : MonoBehaviour
     private Equipment m_xEquipment = null;
     private Equipment m_yEquipment = null;
     internal Equipment m_tempEquipment = null;
+    internal bool m_shouldCheckToEquip = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_playerID = GameStateManager.instance.AddPlayer();
+        m_playerID = GameStateManager.instance.AddPlayer(out playerHUD);
         transform.position = GameStateManager.instance.GetInitialSpawnPoint(m_playerID);
         m_camera = GameObject.Find("Player" + m_playerID + "Camera").GetComponent<Camera>();
         gameObject.GetComponent<PlayerInput>().camera = m_camera;
@@ -59,7 +67,22 @@ public class PlayerController : MonoBehaviour
         m_originalshieldRot = m_LeftHand.transform.rotation.eulerAngles.y;
         m_shieldRot = m_originalshieldRot;
         m_holdshield = true;
-        m_velocity = new Vector3(0.0f,0.0f,0.0f);
+        m_velocity = new Vector3(0.0f, 0.0f, 0.0f);
+
+        switch (m_playerID)
+        {
+            case 2:
+                gameObject.GetComponent<MeshRenderer>().material = player2Mat;
+                break;
+            case 3:
+                gameObject.GetComponent<MeshRenderer>().material = player3Mat;
+                break;
+            case 4:
+                gameObject.GetComponent<MeshRenderer>().material = player4Mat;
+                break;
+            default:
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -69,17 +92,17 @@ public class PlayerController : MonoBehaviour
 
         if (isDashing)
         {
-            transform.position = Vector3.MoveTowards(transform.position,dashPos,Time.deltaTime*dashSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, dashPos, Time.deltaTime * dashSpeed);
 
-            if((dashPos - transform.position).magnitude <= .1)
+            if ((dashPos - transform.position).magnitude <= .1)
             {
                 isDashing = false;
             }
         }
 
-        if(!canDash)
+        if (!canDash)
         {
-            if(dashTimer >= dashDelay)
+            if (dashTimer >= dashDelay)
             {
                 canDash = true;
             }
@@ -89,7 +112,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(m_swingsword)
+        if (m_swingsword)
         {
             SwingSword();
         }
@@ -99,7 +122,7 @@ public class PlayerController : MonoBehaviour
             HoldShield();
         }
 
-        if(m_velocity.magnitude != 0)
+        if (m_velocity.magnitude != 0)
         {
             transform.rotation = Quaternion.Euler(0.0f, -90.0f + Mathf.Atan2(m_velocity.z, -m_velocity.x) * 57.2958f, 0.0f);
         }
@@ -107,7 +130,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMove(InputValue value)
     {
-       m_velocity.x = value.Get<Vector2>().x;
+        m_velocity.x = value.Get<Vector2>().x;
         m_velocity.z = value.Get<Vector2>().y;
         m_velocity.y = 0.0f;
     }
@@ -115,7 +138,10 @@ public class PlayerController : MonoBehaviour
     private void OnStartButton()
     {
         Debug.Log("Start");
-        GameStateManager.instance.SetSplitScreen(true);
+        if (!GameStateManager.instance.m_gameStarted && m_playerID != 0)
+        {
+            GameStateManager.instance.StartGame();
+        }
     }
 
     private void OnSelectButton()
@@ -126,18 +152,25 @@ public class PlayerController : MonoBehaviour
     private void OnAButton()
     {
         Debug.Log("A");
+
+        if (m_tempEquipment != null)
+        {
+            m_shouldCheckToEquip = true;
+            ShowIndicator("Press X Or\nY To Equip");
+        }
     }
 
     private void OnBButton()
     {
         Debug.Log("B");
-        if(canDash)
+
+        if (canDash)
         {
             dashPos = transform.position + (transform.forward * dashDist);
 
             RaycastHit info;
 
-            if(Physics.Raycast(transform.position, transform.forward, out info, dashDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(transform.position, transform.forward, out info, dashDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
             {
                 dashPos = info.point;
             }
@@ -152,13 +185,28 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Y");
 
-        if (m_tempEquipment != null)
+        if (m_shouldCheckToEquip)
         {
+            if (m_yEquipment)
+            {
+                if (Physics.Raycast(transform.position, transform.forward, 2, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    m_yEquipment.transform.position = transform.position - transform.forward * 2;
+                }
+                else
+                {
+                    m_yEquipment.transform.position = transform.position + transform.forward * 2;
+                }
+            }
+
             m_yEquipment = m_tempEquipment;
+            playerHUD.transform.Find("YSprite").GetComponent<RawImage>().color = m_yEquipment.GetComponent<MeshRenderer>().material.color;
+            m_shouldCheckToEquip = false;
+            m_yEquipment.MoveToInventory();
             m_tempEquipment = null;
         }
         else if (m_yEquipment != null)
-        {          
+        {
             m_yEquipment.TriggerAbitily();
         }
     }
@@ -167,12 +215,27 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("X");
 
-        if (m_tempEquipment != null)
+        if (m_shouldCheckToEquip)
         {
+            if (m_xEquipment)
+            {
+                if (Physics.Raycast(transform.position, transform.forward, 2, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    m_xEquipment.transform.position = transform.position - transform.forward * 2;
+                }
+                else
+                {
+                    m_xEquipment.transform.position = transform.position + transform.forward * 2;
+                }            
+            }
+
             m_xEquipment = m_tempEquipment;
+            playerHUD.transform.Find("XSprite").GetComponent<RawImage>().color = m_xEquipment.GetComponent<MeshRenderer>().material.color;
+            m_xEquipment.MoveToInventory();
+            m_shouldCheckToEquip = false;
             m_tempEquipment = null;
         }
-        else if(m_xEquipment != null)
+        else if (m_xEquipment != null)
         {
             m_xEquipment.TriggerAbitily();
         }
@@ -185,6 +248,7 @@ public class PlayerController : MonoBehaviour
         {
             m_swingsword = true;
             m_swingRot = m_finalSwordRot;
+            m_RightHand.SetActive(true);
         }
     }
 
@@ -209,14 +273,18 @@ public class PlayerController : MonoBehaviour
 
     private void SwingSword()
     {
-        m_RightHand.transform.localRotation = Quaternion.Lerp(m_RightHand.transform.localRotation, Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x,m_swingRot, m_RightHand.transform.localRotation.eulerAngles.z),Time.deltaTime * m_swordSpeed);
+        m_RightHand.transform.localRotation = Quaternion.Lerp(m_RightHand.transform.localRotation, Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_swingRot, m_RightHand.transform.localRotation.eulerAngles.z), Time.deltaTime * m_swordSpeed);
 
-        if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_originalSwordRot && m_RightHand.transform.localRotation.eulerAngles.y >= m_originalSwordRot - 1) && m_swingRot == m_originalSwordRot))
+        Debug.Log(m_originalSwordRot);
+
+        if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_originalSwordRot + 1 && m_RightHand.transform.localRotation.eulerAngles.y >= m_originalSwordRot - 1) && m_swingRot == m_originalSwordRot))
         {
+            Debug.Log("Reached");
             m_swingsword = false;
+            m_RightHand.SetActive(false);
         }
 
-        if(((m_RightHand.transform.localRotation.eulerAngles.y <= m_finalSwordRot + 361 && m_RightHand.transform.localRotation.eulerAngles.y >= m_finalSwordRot + 360) && m_swingRot == m_finalSwordRot))
+        if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_finalSwordRot && m_RightHand.transform.localRotation.eulerAngles.y >= m_finalSwordRot - 1) && m_swingRot == m_finalSwordRot))
         {
             m_swingRot = m_originalSwordRot;
         }
@@ -230,5 +298,16 @@ public class PlayerController : MonoBehaviour
         {
             m_holdshield = false;
         }
+    }
+
+    public void ShowIndicator(string i_text)
+    {
+        PlayerIndicatorUI.SetActive(true);
+        PlayerIndicatorUI.GetComponentInChildren<TextMesh>().text = i_text;
+    }
+
+    public void HideIndicator()
+    {
+        PlayerIndicatorUI.SetActive(false);
     }
 }

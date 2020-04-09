@@ -10,9 +10,24 @@ public class Equipment : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            transform.position = m_position;
             other.gameObject.GetComponent<PlayerController>().m_tempEquipment = this;
+            other.gameObject.GetComponent<PlayerController>().ShowIndicator("Press A\nTo Interact");
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerController>().m_tempEquipment = null;
+            other.gameObject.GetComponent<PlayerController>().m_shouldCheckToEquip = false;
+            other.gameObject.GetComponent<PlayerController>().HideIndicator();
+        }
+    }
+
+    public void MoveToInventory()
+    {
+        transform.position = m_position;
     }
 
     public virtual void TriggerAbitily()
