@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Material player4Mat;
     [SerializeField] private GameObject PlayerIndicatorUI;
     private GameObject playerHUD;
+    private int health = 100;
+    private float immuneTimer = 0.0f;
+    [SerializeField] private float immuneDelay = 0.0f;
+    private int immuneTick = 0;
+    private bool isImmune = false;
 
 
     //Movement
@@ -59,7 +64,6 @@ public class PlayerController : MonoBehaviour
         transform.position = GameStateManager.instance.GetInitialSpawnPoint(m_playerID);
         m_camera = GameObject.Find("Player" + m_playerID + "Camera").GetComponent<Camera>();
         gameObject.GetComponent<PlayerInput>().camera = m_camera;
-        Debug.Log("Created Player " + m_playerID);
         m_rb = gameObject.GetComponent<Rigidbody>();
         m_swingsword = false;
         m_originalSwordRot = m_RightHand.transform.rotation.eulerAngles.y;
@@ -126,6 +130,11 @@ public class PlayerController : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0.0f, -90.0f + Mathf.Atan2(m_velocity.z, -m_velocity.x) * 57.2958f, 0.0f);
         }
+
+        if(isImmune)
+        {
+            FlashWhileImmune();
+        }
     }
 
     private void OnMove(InputValue value)
@@ -137,7 +146,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnStartButton()
     {
-        Debug.Log("Start");
         if (!GameStateManager.instance.m_gameStarted && m_playerID != 0)
         {
             GameStateManager.instance.StartGame();
@@ -146,13 +154,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnSelectButton()
     {
-        Debug.Log("Select");
+
     }
 
     private void OnAButton()
     {
-        Debug.Log("A");
-
         if (m_tempEquipment != null)
         {
             m_shouldCheckToEquip = true;
@@ -162,8 +168,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnBButton()
     {
-        Debug.Log("B");
-
         if (canDash)
         {
             dashPos = transform.position + (transform.forward * dashDist);
@@ -183,8 +187,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnYButton()
     {
-        Debug.Log("Y");
-
         if (m_shouldCheckToEquip)
         {
             if (m_yEquipment)
@@ -213,8 +215,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnXButton()
     {
-        Debug.Log("X");
-
         if (m_shouldCheckToEquip)
         {
             if (m_xEquipment)
@@ -243,18 +243,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnRightTrigger()
     {
-        Debug.Log("Right Trigger");
         if (!m_swingsword && (m_shieldRot != m_finalShieldRot))
         {
             m_swingsword = true;
             m_swingRot = m_finalSwordRot;
             m_RightHand.SetActive(true);
+            MusicManager.instance.PlaySwing();
         }
     }
 
     private void OnLeftTrigger()
     {
-        Debug.Log("Left Trigger Pressed");
         if (!m_holdshield)
         {
             m_holdshield = true;
@@ -264,7 +263,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnLeftTriggerRelease()
     {
-        Debug.Log("Left Trigger Release");
         if (m_holdshield)
         {
             m_shieldRot = m_originalshieldRot;
@@ -275,18 +273,24 @@ public class PlayerController : MonoBehaviour
     {
         m_RightHand.transform.localRotation = Quaternion.Lerp(m_RightHand.transform.localRotation, Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_swingRot, m_RightHand.transform.localRotation.eulerAngles.z), Time.deltaTime * m_swordSpeed);
 
-        Debug.Log(m_originalSwordRot);
-
+        /*
         if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_originalSwordRot + 1 && m_RightHand.transform.localRotation.eulerAngles.y >= m_originalSwordRot - 1) && m_swingRot == m_originalSwordRot))
         {
-            Debug.Log("Reached");
             m_swingsword = false;
-            m_RightHand.SetActive(false);
+            m_RightHand.transform.Find("Sword").GetComponent<Sword>().SetBlocked(false);
+            m_RightHand.transform.localRotation = Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_originalSwordRot, m_RightHand.transform.localRotation.eulerAngles.z);
         }
+        */
+
 
         if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_finalSwordRot && m_RightHand.transform.localRotation.eulerAngles.y >= m_finalSwordRot - 1) && m_swingRot == m_finalSwordRot))
         {
+            m_RightHand.SetActive(false);
             m_swingRot = m_originalSwordRot;
+
+            m_swingsword = false;
+            m_RightHand.transform.Find("Sword").GetComponent<Sword>().SetBlocked(false);
+            m_RightHand.transform.localRotation = Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_originalSwordRot, m_RightHand.transform.localRotation.eulerAngles.z);
         }
     }
 
@@ -309,5 +313,49 @@ public class PlayerController : MonoBehaviour
     public void HideIndicator()
     {
         PlayerIndicatorUI.SetActive(false);
+    }
+
+    public void TakeDamage(int i_damage)
+    {
+        if (!isImmune)
+        {
+            health -= i_damage;
+            Debug.Log("Ouch!");
+            Debug.Log("Player " + m_playerID + " Health is " + health);
+            BecomeImmune();
+        }
+    }
+
+    public void BecomeImmune()
+    {
+        isImmune = true;
+        immuneTimer = 0.0f;
+    }
+
+    private void FlashWhileImmune()
+    {
+        if(immuneTimer >= immuneDelay)
+        {
+            gameObject.GetComponent<MeshRenderer>().enabled = true;
+            isImmune = false;
+            immuneTick = 0;
+        }
+        else
+        {
+            immuneTimer += Time.deltaTime;
+            immuneTick++;
+
+            if(immuneTick % 15 == 0)
+            {
+                if(gameObject.GetComponent<MeshRenderer>().enabled)
+                {
+                    gameObject.GetComponent<MeshRenderer>().enabled = false;
+                }
+                else
+                {
+                    gameObject.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+        }
     }
 }

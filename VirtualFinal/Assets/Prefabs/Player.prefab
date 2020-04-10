@@ -139,9 +139,10 @@ GameObject:
   - component: {fileID: 3231275183396624024}
   - component: {fileID: 2299895447868173508}
   - component: {fileID: 7214875663031200250}
+  - component: {fileID: 8380240101944438587}
   m_Layer: 0
   m_Name: Sword
-  m_TagString: Untagged
+  m_TagString: Sword
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -217,10 +218,22 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.75
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8380240101944438587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460829699495907896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e2887d7ce24225498230fb19956d583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2229452691878656784
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,13 +381,14 @@ MonoBehaviour:
   player3Mat: {fileID: 2100000, guid: edc3b3f9cd7139640b32c5ca8bedc624, type: 2}
   player4Mat: {fileID: 2100000, guid: 77867ddb8594a094dbfce67d0ed0e860, type: 2}
   PlayerIndicatorUI: {fileID: 787053984139579340}
+  immuneDelay: 1
   m_walkSpeed: 10
   dashDist: 5
   dashSpeed: 20
   dashDelay: 1.5
   m_RightHand: {fileID: 109833863741759870}
   m_finalSwordRot: 60
-  m_swordSpeed: 50
+  m_swordSpeed: 25
   m_LeftHand: {fileID: 3281306400739679265}
   m_finalShieldRot: 90
   m_shieldSpeed: 20
@@ -661,8 +675,8 @@ GameObject:
   - component: {fileID: 2393288687356682879}
   - component: {fileID: 6011484706557781001}
   m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
+  m_Name: Shield
+  m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -736,7 +750,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8486741380251139231}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
