@@ -323,6 +323,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Ouch!");
             Debug.Log("Player " + m_playerID + " Health is " + health);
             BecomeImmune();
+            UpdateHealthIndicator();
         }
     }
 
@@ -330,6 +331,11 @@ public class PlayerController : MonoBehaviour
     {
         isImmune = true;
         immuneTimer = 0.0f;
+    }
+
+    private void UpdateHealthIndicator()
+    {
+        playerHUD.transform.Find("HealthSprite").GetComponentInChildren<Text>().text = health.ToString();
     }
 
     private void FlashWhileImmune()
