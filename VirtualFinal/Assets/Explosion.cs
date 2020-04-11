@@ -6,6 +6,7 @@ public class Explosion : MonoBehaviour
 {
     [SerializeField] private int damage;
     [SerializeField] private int tickDelay;
+    [SerializeField] private GameObject SmokeCloud;
     private int tickCounter = 0;
 
     private void OnTriggerEnter(Collider other)
@@ -27,6 +28,7 @@ public class Explosion : MonoBehaviour
     {
         if(tickCounter >= tickDelay)
         {
+            Instantiate(SmokeCloud, transform.position + SmokeCloud.transform.position, SmokeCloud.transform.rotation);
             Destroy(transform.parent.gameObject);
         }
         else

@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviour
             m_shouldCheckToEquip = true;
             ShowIndicator("Press X Or\nY To Equip");
         }
-        else if(couldHold != null && holding == null)
+        else if(couldHold != null && holding == null && !m_holdshield)
         {
             couldHold.GetComponent<PickUpObject>().PickUp(this.gameObject);
             HideIndicator();
@@ -224,7 +224,7 @@ public class PlayerController : MonoBehaviour
             m_yEquipment.MoveToInventory();
             m_tempEquipment = null;
         }
-        else if (m_yEquipment != null)
+        else if (m_yEquipment != null && !m_holdshield && !holding && !m_swingsword)
         {
             m_yEquipment.TriggerAbitily(this.gameObject);
         }
@@ -252,7 +252,7 @@ public class PlayerController : MonoBehaviour
             m_shouldCheckToEquip = false;
             m_tempEquipment = null;
         }
-        else if (m_xEquipment != null)
+        else if (m_xEquipment != null && !m_holdshield && !holding && !m_swingsword)
         {
             m_xEquipment.TriggerAbitily(this.gameObject);
         }
@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnRightTrigger()
     {
-        if (!m_swingsword && (m_shieldRot != m_finalShieldRot))
+        if (!m_swingsword && (m_shieldRot != m_finalShieldRot) && !holding)
         {
             m_swingsword = true;
             m_swingRot = m_finalSwordRot;
@@ -271,7 +271,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnLeftTrigger()
     {
-        if (!m_holdshield)
+        if (!m_holdshield && !holding)
         {
             m_holdshield = true;
             m_shieldRot = m_finalShieldRot;
@@ -341,6 +341,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Player " + m_playerID + " Health is " + health);
             BecomeImmune();
             UpdateHealthIndicator();
+            MusicManager.instance.PlayDamagedPlayer();
         }
     }
 
@@ -363,11 +364,16 @@ public class PlayerController : MonoBehaviour
 
     public void RemoveCould(GameObject i_pickup)
     {
-        if(couldHold.Equals(i_pickup))
+        if (couldHold != null && couldHold.Equals(i_pickup))
         {
             HideIndicator();
             couldHold = null;
         }
+    }
+
+    public GameObject GetRightHand()
+    {
+        return m_RightHand;
     }
 
     private void FlashWhileImmune()

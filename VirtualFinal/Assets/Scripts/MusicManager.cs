@@ -9,6 +9,9 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioSource bGSource;
     [SerializeField] private AudioClip ShieldStrike;
     [SerializeField] private AudioClip SwordSwing;
+    [SerializeField] private AudioClip BombExplosion;
+    [SerializeField] private AudioClip DamagedPlayer;
+    [SerializeField] private AudioClip SpearStick;
 
     public static MusicManager instance
     {
@@ -43,5 +46,20 @@ public class MusicManager : MonoBehaviour
     public void PlaySwing()
     {
         source.PlayOneShot(SwordSwing);
+    }
+
+    public void PlayExplosion()
+    {
+        source.PlayOneShot(BombExplosion);
+    }
+
+    public void PlayDamagedPlayer()
+    {
+        source.PlayOneShot(DamagedPlayer);
+    }
+
+    public void PlaySpearStick()
+    {
+        source.PlayOneShot(SpearStick);
     }
 }

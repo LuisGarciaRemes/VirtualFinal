@@ -11,7 +11,7 @@ public class BombEquipment : Equipment
     {
         if(currBomb == null)
         {
-           currBomb = Instantiate(bombPrefab, i_player.transform.position + i_player.transform.forward, new Quaternion());
+           currBomb = Instantiate(bombPrefab, new Vector3(i_player.transform.position.x, bombPrefab.transform.position.y, i_player.transform.position.z) + i_player.transform.forward, new Quaternion());
         }
     }
 

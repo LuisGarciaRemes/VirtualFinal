@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8599496446097059240}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1549134027600264010}
   - component: {fileID: 3168741315442771884}
   - component: {fileID: 1056667004170814963}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PlayerIndicatorUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,8 +57,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 787053984139579340}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1, z: 2}
-  m_LocalScale: {x: 30, y: 30, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 20, y: 20, z: 1}
   m_Children:
   - {fileID: 1721190559877811755}
   m_Father: {fileID: 2229452691878656798}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b05be6fdabd0c649b1fc7d409678143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offSet: {x: 0, y: 1, z: 4}
+  offSet: {x: 2, y: 1, z: 2}
 --- !u!1 &1460829699495907896
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 2299895447868173508}
   - component: {fileID: 7214875663031200250}
   - component: {fileID: 8380240101944438587}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sword
   m_TagString: Sword
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 2229452691878656786}
   - component: {fileID: 2229452691878656785}
   - component: {fileID: -8235933743173796543}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -264,8 +264,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2229452691878656784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 8599496446097059240}
   - {fileID: 6134576287414540002}
@@ -382,9 +382,9 @@ MonoBehaviour:
   player4Mat: {fileID: 2100000, guid: 77867ddb8594a094dbfce67d0ed0e860, type: 2}
   PlayerIndicatorUI: {fileID: 787053984139579340}
   immuneDelay: 1
-  m_walkSpeed: 10
-  dashDist: 5
-  dashSpeed: 20
+  m_walkSpeed: 8
+  dashDist: 4
+  dashSpeed: 16
   dashDelay: 1.5
   m_RightHand: {fileID: 109833863741759870}
   m_finalSwordRot: 60
@@ -418,7 +418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 163940390808104215}
   - component: {fileID: 3659113668962185215}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 1721190559877811755}
   - component: {fileID: 1698910956349115921}
   - component: {fileID: 8861645406099492457}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6134576287414540002}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 5513298874243645398}
   - component: {fileID: 2393288687356682879}
   - component: {fileID: 6011484706557781001}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Shield
   m_TagString: Shield
   m_Icon: {fileID: 0}
@@ -690,7 +690,7 @@ Transform:
   m_GameObject: {fileID: 8486741380251139231}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.75, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 1, z: 1}
+  m_LocalScale: {x: 0.25, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6134576287414540002}
   m_RootOrder: 0

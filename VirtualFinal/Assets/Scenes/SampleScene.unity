@@ -1586,10 +1586,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 434240395}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60432e83da17de0419cf5728373b7dd0, type: 3}
+  m_Script: {fileID: 11500000, guid: f9a535cf8428a1e4f9373f521cf1a7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_position: {x: 0, y: 50, z: 0}
+  spearPrefab: {fileID: 7319865177853232097, guid: f60c9a1fad9ec794b936996ac647319f,
+    type: 3}
 --- !u!65 &434240397
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2570,6 +2572,9 @@ MonoBehaviour:
   bGSource: {fileID: 132108377}
   ShieldStrike: {fileID: 8300000, guid: 44e3380ec8eb6c444a1b50587b187502, type: 3}
   SwordSwing: {fileID: 8300000, guid: 281d9f6e6aef6324593dc032b896f26a, type: 3}
+  BombExplosion: {fileID: 8300000, guid: 670fe33ebe806ba40bc6f05ae06909c5, type: 3}
+  DamagedPlayer: {fileID: 8300000, guid: 7957527035aa0fe459a44ec28d84a976, type: 3}
+  SpearStick: {fileID: 8300000, guid: e7a6f73bdd5994542916e3df3c0742a8, type: 3}
 --- !u!4 &834979835
 Transform:
   m_ObjectHideFlags: 0

@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1233765000259906999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3333334, y: 1.333333, z: 1.333333}
   m_Children: []
   m_Father: {fileID: 5939262143225710457}
   m_RootOrder: 1
@@ -102,7 +102,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &838382579355711351
 MonoBehaviour:
@@ -118,6 +118,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   tickDelay: 5
+  SmokeCloud: {fileID: 5404574385940507502, guid: 591c13091478a2a45b5a64511e4e224f,
+    type: 3}
 --- !u!1 &7215165042538921137
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +133,7 @@ GameObject:
   - component: {fileID: 6469059182797356099}
   - component: {fileID: 6790975706099919180}
   - component: {fileID: 6698575112104250923}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7215165042538921137}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4529059000247282828}
@@ -226,5 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a05f2ef4c7e707a4e9f0efddfb81f611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 4
+  delay: 3
+  flashOffset: 0.5
   blastSphere: {fileID: 5156351114185336176}
