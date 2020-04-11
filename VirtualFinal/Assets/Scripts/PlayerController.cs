@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour
     internal Equipment m_tempEquipment = null;
     internal bool m_shouldCheckToEquip = false;
 
+    //Interacting
+    private GameObject couldHold = null;
+    private GameObject holding = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -164,6 +168,19 @@ public class PlayerController : MonoBehaviour
             m_shouldCheckToEquip = true;
             ShowIndicator("Press X Or\nY To Equip");
         }
+        else if(couldHold != null && holding == null)
+        {
+            couldHold.GetComponent<PickUpObject>().PickUp(this.gameObject);
+            HideIndicator();
+            holding = couldHold;
+            couldHold = null;
+        }
+        else if(holding)
+        {
+            holding.GetComponent<PickUpObject>().Throw();
+            holding = null;
+        }
+        
     }
 
     private void OnBButton()
@@ -176,7 +193,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(transform.position, transform.forward, out info, dashDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
             {
-                dashPos = info.point;
+                dashPos = info.point - (transform.forward/2);
             }
 
             isDashing = true;
@@ -209,7 +226,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (m_yEquipment != null)
         {
-            m_yEquipment.TriggerAbitily();
+            m_yEquipment.TriggerAbitily(this.gameObject);
         }
     }
 
@@ -237,7 +254,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (m_xEquipment != null)
         {
-            m_xEquipment.TriggerAbitily();
+            m_xEquipment.TriggerAbitily(this.gameObject);
         }
     }
 
@@ -336,6 +353,21 @@ public class PlayerController : MonoBehaviour
     private void UpdateHealthIndicator()
     {
         playerHUD.transform.Find("HealthSprite").GetComponentInChildren<Text>().text = health.ToString();
+    }
+
+    public void SetCouldHold(GameObject i_pickup)
+    {
+        ShowIndicator("A To Pick Up");
+        couldHold = i_pickup;
+    }
+
+    public void RemoveCould(GameObject i_pickup)
+    {
+        if(couldHold.Equals(i_pickup))
+        {
+            HideIndicator();
+            couldHold = null;
+        }
     }
 
     private void FlashWhileImmune()

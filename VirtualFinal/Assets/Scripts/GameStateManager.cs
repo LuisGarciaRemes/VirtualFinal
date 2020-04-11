@@ -94,6 +94,7 @@ public class GameStateManager : MonoBehaviour
     {
         m_gameStarted = true;
         SetSplitScreen(true);
+        m_inputManager.DisableJoining();
         
         foreach(GameObject panel in playerPanels)
         {

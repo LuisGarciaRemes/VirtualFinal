@@ -30,7 +30,7 @@ public class Equipment : MonoBehaviour
         transform.position = m_position;
     }
 
-    public virtual void TriggerAbitily()
+    public virtual void TriggerAbitily(GameObject i_player)
     {
         Debug.Log("Ability Used");
     }
