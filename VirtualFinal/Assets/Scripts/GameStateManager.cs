@@ -64,22 +64,22 @@ public class GameStateManager : MonoBehaviour
             case 1:
                 o_playerHUD = playerHUDs[0];
                 tempText = playerPanels[0].GetComponentInChildren<Text>();
-                tempText.text = "Player 1 ready!\nPress Start to beging the match";
+                tempText.text = "Player 1 ready!\nPress Start to begin the match";
                 break;
             case 2:
                 o_playerHUD = playerHUDs[1];
                 tempText = playerPanels[1].GetComponentInChildren<Text>();
-                tempText.text = "Player 2 ready!\nPress Start to beging the match";
+                tempText.text = "Player 2 ready!\nPress Start to begin the match";
                 break;
             case 3:
                 o_playerHUD = playerHUDs[2];
                 tempText = playerPanels[2].GetComponentInChildren<Text>();
-                tempText.text = "Player 3 ready!\nPress Start to beging the match";
+                tempText.text = "Player 3 ready!\nPress Start to begin the match";
                 break;
             case 4:
                 o_playerHUD = playerHUDs[3];
                 tempText = playerPanels[3].GetComponentInChildren<Text>();
-                tempText.text = "Player 4 ready!\nPress Start to beging the match";
+                tempText.text = "Player 4 ready!\nPress Start to begin the match";
                 break;
             default:
                 tempText = null;

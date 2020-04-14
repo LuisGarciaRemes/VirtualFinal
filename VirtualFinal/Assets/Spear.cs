@@ -53,6 +53,7 @@ public class Spear : MonoBehaviour
         else if (other.gameObject.CompareTag("Player") && !hitShield)
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            Destroy(spear);
         }
     }
 }
