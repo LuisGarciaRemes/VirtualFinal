@@ -392,6 +392,7 @@ MonoBehaviour:
   m_LeftHand: {fileID: 3281306400739679265}
   m_finalShieldRot: 90
   m_shieldSpeed: 20
+  slowDelay: 2
 --- !u!54 &-8235933743173796543
 Rigidbody:
   m_ObjectHideFlags: 0

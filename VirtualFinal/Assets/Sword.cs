@@ -25,7 +25,7 @@ public class Sword : MonoBehaviour
         {
             MusicManager.instance.PlayStrike();
             SetBlocked(true);
-            Debug.Log("Blocked");
+            transform.parent.gameObject.SetActive(false);
         }
     }
 

@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     //Movement
     private Vector3 m_velocity;
-    private Rigidbody m_rb;
+    internal Rigidbody m_rb;
     [SerializeField] private float m_walkSpeed = 10;
     private bool isDashing = false;
     private bool canDash = true;
@@ -60,6 +60,11 @@ public class PlayerController : MonoBehaviour
     //Interacting
     private GameObject couldHold = null;
     private GameObject holding = null;
+
+    //Spikes
+    private float slowTimer = 0.0f;
+    [SerializeField] private float slowDelay;
+    private bool isSlowed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -139,6 +144,14 @@ public class PlayerController : MonoBehaviour
         {
             FlashWhileImmune();
         }
+
+        if(isSlowed)
+        {
+            CheckSlowed();
+        }
+
+        CheckHealth();
+
     }
 
     private void OnMove(InputValue value)
@@ -376,6 +389,33 @@ public class PlayerController : MonoBehaviour
         return m_RightHand;
     }
 
+    public void SteppedOnSpike()
+    {
+        slowTimer = 0.0f;
+
+        if (!isSlowed)
+        {
+            isSlowed = true;
+            m_walkSpeed /= 2;
+            dashSpeed /= 2;
+        }
+        TakeDamage(5);
+    }
+
+    private void CheckSlowed()
+    {
+        if(slowTimer >= slowDelay)
+        {
+            m_walkSpeed *= 2;
+            dashSpeed *= 2;
+            isSlowed = false;
+        }
+        else
+        {
+            slowTimer += Time.deltaTime;
+        }
+    }
+
     private void FlashWhileImmune()
     {
         if(immuneTimer >= immuneDelay)
@@ -400,6 +440,16 @@ public class PlayerController : MonoBehaviour
                     gameObject.GetComponent<MeshRenderer>().enabled = true;
                 }
             }
+        }
+    }
+
+    private void CheckHealth()
+    {
+        if(health <= 0)
+        {       
+            GameStateManager.instance.CheckGameOver(m_playerID);
+            playerHUD.SetActive(false);
+            Destroy(this.gameObject);
         }
     }
 }

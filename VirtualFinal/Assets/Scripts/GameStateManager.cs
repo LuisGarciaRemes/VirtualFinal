@@ -16,6 +16,9 @@ public class GameStateManager : MonoBehaviour
 
 
     internal bool m_gameStarted = false;
+    internal bool m_gameover = false;
+
+    internal bool[] playerAlive;
 
     public static GameStateManager instance
     {
@@ -43,9 +46,15 @@ public class GameStateManager : MonoBehaviour
         PauseGame();
     }
 
+    private void Start()
+    {
+        playerAlive = new bool[4] {false,false,false,false};
+    }
+
     public int AddPlayer(out GameObject o_playerHUD)
     {
         gameObject.GetComponent<CameraManager>().SetToDisplay(m_numPlayers);
+        playerAlive[m_numPlayers] = true;
         m_numPlayers++;
         Text tempText = null;
         o_playerHUD = null;
@@ -117,5 +126,32 @@ public class GameStateManager : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1.0f;
+    }
+
+    public void CheckGameOver(int deadPlayer)
+    {
+        playerPanels[deadPlayer - 1].SetActive(true);
+        playerPanels[deadPlayer - 1].GetComponentInChildren<Text>().text = "Player " + deadPlayer + " Died!";
+        playerAlive[deadPlayer-1] = false;
+
+            int winningPlayer = 1;
+            int aliveCounter = 0;
+            for(int i = 0; i < 4; i++)
+            {
+                if(playerAlive[i])
+                {
+                    aliveCounter++;
+                winningPlayer = i + 1;
+                }
+            }
+
+            if(aliveCounter <= 1)
+            {
+                m_gameover = true;
+                playerPanels[winningPlayer - 1].SetActive(true);
+                playerPanels[winningPlayer - 1].GetComponentInChildren<Text>().text = "Player " + winningPlayer + " Wins!";
+                playerHUDs[winningPlayer - 1].SetActive(false);
+                Time.timeScale = 0.0f;
+            }
     }
 }
