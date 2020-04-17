@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
-    [SerializeField] private Vector3 m_position;
+    [SerializeField] private GameObject room;
 
     private void OnTriggerExit(Collider other)
     {
         if(other.gameObject.CompareTag("Player"))
         {
-            CameraManager.instance.UpdateCameraPosition(other.gameObject.GetComponent<PlayerController>().m_playerID,m_position);
+            CameraManager.instance.UpdateCameraPosition(other.gameObject.GetComponent<PlayerController>().m_playerID, room.transform.position);
         }
     }
 }
