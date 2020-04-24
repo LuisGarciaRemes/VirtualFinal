@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(transform.position, transform.forward, out info, dashDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
             {
-                dashPos = info.point - (transform.forward/2);
+                dashPos = info.point - (transform.forward + transform.forward/2);
             }
 
             isDashing = true;
