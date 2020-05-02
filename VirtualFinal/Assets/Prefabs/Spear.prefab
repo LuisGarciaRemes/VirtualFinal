@@ -106,10 +106,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a893d36a3a0ebc24e8c25443ef8946ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
+  speed: 35
   spear: {fileID: 7319865177853232097}
-  damage: 10
-  disappearDelay: 1
+  damage: 15
+  disappearDelay: 0.5
 --- !u!1 &6792006751854198798
 GameObject:
   m_ObjectHideFlags: 0

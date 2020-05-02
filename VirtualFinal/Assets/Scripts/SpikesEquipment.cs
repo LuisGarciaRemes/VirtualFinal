@@ -17,6 +17,21 @@ public class SpikesEquipment : Equipment
             {
                 timer = 0.0f;
                 canThrow = true;
+
+                if (owner)
+                {
+                    switch (slot)
+                    {
+                        case 'x':
+                            owner.DisplayX();
+                            break;
+                        case 'y':
+                            owner.DisplayY();
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             else
             {
@@ -46,11 +61,12 @@ public class SpikesEquipment : Equipment
                 rightVector = i_player.transform.position - (i_player.transform.forward) * 2 + (i_player.transform.right) * 2f;
             }
 
-            Instantiate(spikes,new Vector3(leftVector.x,.1f,leftVector.z),spikes.transform.rotation);
-            Instantiate(spikes, new Vector3(middleVector.x, .1f, middleVector.z), spikes.transform.rotation);
-            Instantiate(spikes, new Vector3(rightVector.x, .1f, rightVector.z), spikes.transform.rotation);
+            Instantiate(spikes,new Vector3(leftVector.x, i_player.transform.position.y, leftVector.z),spikes.transform.rotation);
+            Instantiate(spikes, new Vector3(middleVector.x, i_player.transform.position.y, middleVector.z), spikes.transform.rotation);
+            Instantiate(spikes, new Vector3(rightVector.x, i_player.transform.position.y, rightVector.z), spikes.transform.rotation);
 
             canThrow = false;
+            MusicManager.instance.PlayThrow();
         }
     }
 }

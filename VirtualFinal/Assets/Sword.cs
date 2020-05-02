@@ -6,6 +6,7 @@ public class Sword : MonoBehaviour
 {
 
     private GameObject player;
+    [SerializeField] GameObject shield;
     private bool isBlocked = false;
 
     // Start is called before the first frame update
@@ -18,15 +19,15 @@ public class Sword : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player") && !other.gameObject.Equals(player) && !isBlocked)
         {
-            other.gameObject.GetComponent<PlayerController>().TakeDamage(5);
+            other.gameObject.GetComponent<PlayerController>().TakeDamage(10);
         }
-
-        if (other.gameObject.CompareTag("Shield") && !other.gameObject.Equals(player.transform.Find("LeftHand").Find("Shield")))
+        else if (other.gameObject.CompareTag("Shield") && !other.gameObject.Equals(shield))
         {
             MusicManager.instance.PlayStrike();
             SetBlocked(true);
             transform.parent.gameObject.SetActive(false);
         }
+
     }
 
     public void SetBlocked(bool i_bool)

@@ -23,6 +23,7 @@ public class PickUpObject : MonoBehaviour
             bounceOffset = (pos - transform.position).normalized;
             pos = transform.position - (bounceOffset);
             pos = new Vector3(pos.x,yOG,pos.z);
+            MusicManager.instance.PlayThud();
         }
     }
 
@@ -38,9 +39,10 @@ public class PickUpObject : MonoBehaviour
     {
         Heldby = i_player;
         yOG = parentObject.transform.position.y;
-        transform.parent.gameObject.transform.position = i_player.transform.position + i_player.transform.up;
+        transform.parent.gameObject.transform.position = i_player.transform.position + i_player.transform.up*2;
         parentObject.transform.SetParent(i_player.transform);
         gameObject.GetComponent<SphereCollider>().enabled = false;
+        MusicManager.instance.PlayLift();
     }
 
     public void Throw()
@@ -56,6 +58,7 @@ public class PickUpObject : MonoBehaviour
         Heldby = null;
         thrown = true;
         gameObject.GetComponent<SphereCollider>().enabled = true;
+        MusicManager.instance.PlayThrow();
     }
 
     private void Update()
@@ -66,7 +69,8 @@ public class PickUpObject : MonoBehaviour
 
             if (parentObject.transform.position == pos)
             {
-                thrown = false;               
+                thrown = false;
+                MusicManager.instance.PlayThud();
             }
 
         }

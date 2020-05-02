@@ -23,16 +23,17 @@ public class PlayerController : MonoBehaviour
 
 
     //Movement
-    private Vector3 m_velocity;
+    internal Vector3 m_velocity;
     internal Rigidbody m_rb;
     [SerializeField] private float m_walkSpeed = 10;
-    private bool isDashing = false;
+    internal bool isDashing = false;
     private bool canDash = true;
     [SerializeField] private float dashDist;
     [SerializeField] private float dashSpeed = 20;
     private Vector3 dashPos;
     private float dashTimer = 0.0f;
     [SerializeField] float dashDelay;
+    internal bool isFalling = false;
 
     //Sword
     [SerializeField] GameObject m_RightHand;
@@ -109,7 +110,7 @@ public class PlayerController : MonoBehaviour
 
             if ((dashPos - transform.position).magnitude <= .1)
             {
-                isDashing = false;
+                isDashing = false;             
             }
         }
 
@@ -118,6 +119,7 @@ public class PlayerController : MonoBehaviour
             if (dashTimer >= dashDelay)
             {
                 canDash = true;
+                DisplayB();
             }
             else
             {
@@ -156,9 +158,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnMove(InputValue value)
     {
-        m_velocity.x = value.Get<Vector2>().x;
-        m_velocity.z = value.Get<Vector2>().y;
-        m_velocity.y = 0.0f;
+        if (!isFalling)
+        {
+            m_velocity.x = value.Get<Vector2>().x;
+            m_velocity.z = value.Get<Vector2>().y;
+            m_velocity.y = 0.0f;
+        }
     }
 
     private void OnStartButton()
@@ -212,6 +217,8 @@ public class PlayerController : MonoBehaviour
             isDashing = true;
             canDash = false;
             dashTimer = 0.0f;
+            playerHUD.transform.Find("BSprite").gameObject.SetActive(false);
+            MusicManager.instance.PlayDash();
         }
     }
 
@@ -229,10 +236,12 @@ public class PlayerController : MonoBehaviour
                 {
                     m_yEquipment.transform.position = transform.position + transform.forward * 2;
                 }
+                m_yEquipment.SetOwnerAndSlot(null, ' ');
             }
+            playerHUD.transform.Find("YSprite").gameObject.SetActive(true);
 
             m_yEquipment = m_tempEquipment;
-            playerHUD.transform.Find("YSprite").GetComponent<RawImage>().color = m_yEquipment.GetComponent<MeshRenderer>().material.color;
+            playerHUD.transform.Find("YSprite").GetComponent<RawImage>().color = new Color(m_yEquipment.GetComponent<MeshRenderer>().material.color.r, m_yEquipment.GetComponent<MeshRenderer>().material.color.g, m_yEquipment.GetComponent<MeshRenderer>().material.color.b, 0.5f);
             m_shouldCheckToEquip = false;
             m_yEquipment.MoveToInventory();
             m_tempEquipment = null;
@@ -240,6 +249,8 @@ public class PlayerController : MonoBehaviour
         else if (m_yEquipment != null && !m_holdshield && !holding && !m_swingsword)
         {
             m_yEquipment.TriggerAbitily(this.gameObject);
+            playerHUD.transform.Find("YSprite").gameObject.SetActive(false);
+            m_yEquipment.SetOwnerAndSlot(this,'y');
         }
     }
 
@@ -256,11 +267,12 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     m_xEquipment.transform.position = transform.position + transform.forward * 2;
-                }            
+                }
+                m_xEquipment.SetOwnerAndSlot(null, ' ');
             }
-
+            playerHUD.transform.Find("XSprite").gameObject.SetActive(true);
             m_xEquipment = m_tempEquipment;
-            playerHUD.transform.Find("XSprite").GetComponent<RawImage>().color = m_xEquipment.GetComponent<MeshRenderer>().material.color;
+            playerHUD.transform.Find("XSprite").GetComponent<RawImage>().color = new Color(m_xEquipment.GetComponent<MeshRenderer>().material.color.r, m_xEquipment.GetComponent<MeshRenderer>().material.color.g, m_xEquipment.GetComponent<MeshRenderer>().material.color.b, 0.5f);
             m_xEquipment.MoveToInventory();
             m_shouldCheckToEquip = false;
             m_tempEquipment = null;
@@ -268,6 +280,8 @@ public class PlayerController : MonoBehaviour
         else if (m_xEquipment != null && !m_holdshield && !holding && !m_swingsword)
         {
             m_xEquipment.TriggerAbitily(this.gameObject);
+            playerHUD.transform.Find("XSprite").gameObject.SetActive(false);
+            m_xEquipment.SetOwnerAndSlot(this, 'x');
         }
     }
 
@@ -371,7 +385,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetCouldHold(GameObject i_pickup)
     {
-        ShowIndicator("A To Pick Up");
+        ShowIndicator("Press A To\nPick Up");
         couldHold = i_pickup;
     }
 
@@ -450,6 +464,47 @@ public class PlayerController : MonoBehaviour
             GameStateManager.instance.CheckGameOver(m_playerID);
             playerHUD.SetActive(false);
             Destroy(this.gameObject);
+        }
+    }
+
+    public void KnockBack(Vector3 direction, float knockBackDist)
+    {
+        dashPos = transform.position + (direction * knockBackDist);
+
+        RaycastHit info;
+
+        if (Physics.Raycast(transform.position, direction, out info, knockBackDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+        {
+            dashPos = info.point - (direction * 1.0f);
+        }
+
+        isDashing = true;
+        canDash = false;
+        dashTimer = 0.0f;
+    }
+
+    public void DisplayY()
+    {
+        GameObject y = playerHUD.transform.Find("YSprite").gameObject;
+        if(!y.activeSelf)
+        {
+            y.SetActive(true);
+        }
+    }
+    public void DisplayX()
+    {
+        GameObject x = playerHUD.transform.Find("XSprite").gameObject;
+        if (!x.activeSelf)
+        {
+            x.SetActive(true);
+        }
+    }
+    public void DisplayB()
+    {
+        GameObject b = playerHUD.transform.Find("BSprite").gameObject;
+        if (!b.activeSelf)
+        {
+            b.SetActive(true);
         }
     }
 }

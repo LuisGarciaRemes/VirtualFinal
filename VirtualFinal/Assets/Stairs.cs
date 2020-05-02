@@ -8,15 +8,26 @@ public class Stairs : MonoBehaviour
     [SerializeField] private GameObject room;
     internal bool canUse = true;
     internal GameObject player = null;
+    [SerializeField] private bool up = false;
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Player") && canUse)
         {
-            other.gameObject.transform.position = exit.transform.position + new Vector3(0.0f,0.6f,0.0f);
+            other.gameObject.transform.position = exit.transform.position + new Vector3(0.0f,1.1f,0.0f);
             CameraManager.instance.UpdateCameraPosition(other.gameObject.GetComponent<PlayerController>().m_playerID, room.transform.position);
             exit.GetComponent<Stairs>().canUse = false;
             canUse = false;
             exit.GetComponent<Stairs>().player = other.gameObject;
+            other.gameObject.GetComponent<PlayerController>().isDashing = false;
+
+            if(up)
+            {
+                MusicManager.instance.PlayStairsUp();
+            }
+            else
+            {
+                MusicManager.instance.PlayStairsDown();
+            }
         }
     }
 

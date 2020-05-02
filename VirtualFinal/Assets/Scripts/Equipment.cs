@@ -5,6 +5,8 @@ using UnityEngine;
 public class Equipment : MonoBehaviour
 {
     [SerializeField] private Vector3 m_position;
+    internal char slot = ' ';
+    internal PlayerController owner;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -33,6 +35,12 @@ public class Equipment : MonoBehaviour
     public virtual void TriggerAbitily(GameObject i_player)
     {
         Debug.Log("Ability Used");
+    }
+
+    public void SetOwnerAndSlot(PlayerController i_owner, char i_slot)
+    {
+        owner = i_owner;
+        slot = i_slot;
     }
 
 }
