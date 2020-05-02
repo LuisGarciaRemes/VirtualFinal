@@ -15,6 +15,7 @@ public class Landing : MonoBehaviour
             transform.parent.GetComponent<Hole>().players.Remove(other.gameObject);
             CameraManager.instance.UpdateCameraPosition(other.gameObject.GetComponent<PlayerController>().m_playerID, room.transform.position);
             other.gameObject.GetComponent<PlayerController>().TakeDamage(15);
+            MusicManager.instance.PlayThud();
         }
     }
 }

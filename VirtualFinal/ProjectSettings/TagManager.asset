@@ -7,6 +7,11 @@ TagManager:
   - Sword
   - Shield
   - Wall
+  - Spear
+  - Switch
+  - Spikes
+  - Explosion
+  - Blade
   layers:
   - Default
   - TransparentFX

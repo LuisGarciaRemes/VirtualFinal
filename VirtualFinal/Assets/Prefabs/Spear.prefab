@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 598809173155350601}
   m_Layer: 0
   m_Name: Tip
-  m_TagString: Untagged
+  m_TagString: Spear
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 598809173155350604}
   m_LocalRotation: {x: -0, y: 0.38268343, z: -0, w: 0.92387956}
   m_LocalPosition: {x: -0.66161156, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.05, z: 0.25}
+  m_LocalScale: {x: 0.35, y: 0.05, z: 0.35}
   m_Children: []
   m_Father: {fileID: 7572342641879896430}
   m_RootOrder: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
   speed: 35
   spear: {fileID: 7319865177853232097}
   damage: 15
-  disappearDelay: 0.5
+  disappearDelay: 0.25
 --- !u!1 &6792006751854198798
 GameObject:
   m_ObjectHideFlags: 0

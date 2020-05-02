@@ -47,13 +47,19 @@ public class Spear : MonoBehaviour
         {
             shouldStop = true;
             hitShield = true;
-            disappearDelay = 0.25f;
             MusicManager.instance.PlayStrike();
         }
         else if (other.gameObject.CompareTag("Player") && !hitShield)
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
             Destroy(spear);
+        }
+        else if (other.gameObject.CompareTag("Switch"))
+        {
+            other.gameObject.GetComponent<Switch>().HitSwitch();
+            shouldStop = true;
+            hitShield = true;
+            MusicManager.instance.PlayStrike();
         }
     }
 }

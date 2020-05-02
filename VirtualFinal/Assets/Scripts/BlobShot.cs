@@ -11,6 +11,7 @@ public class BlobShot : MonoBehaviour
     [SerializeField] private GameObject splat;
     [SerializeField] private int damage = 5;
     [SerializeField] private float knockback = 3;
+    private int tick = 1;
 
     // Update is called once per frame
     void Update()
@@ -25,6 +26,20 @@ public class BlobShot : MonoBehaviour
         {
             timer += Time.deltaTime;
         }
+
+        if(tick%100 == 0)
+        {
+            if(transform.localScale == new Vector3(1.5f,2f,2f))
+            {
+                transform.localScale = new Vector3(2f,2f,1.5f);
+            }
+            else
+            {
+                transform.localScale = new Vector3(1.5f, 2f, 2f);
+            }
+        }
+
+        tick++;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -40,6 +55,10 @@ public class BlobShot : MonoBehaviour
         {
             collision.gameObject.GetComponent<PlayerController>().KnockBack(-collision.impulse.normalized,knockback);
             collision.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+        }
+        else if (collision.gameObject.CompareTag("Switch"))
+        {
+            collision.gameObject.GetComponent<Switch>().HitSwitch();
         }
 
         hitShield = false;

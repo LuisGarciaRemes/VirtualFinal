@@ -27,6 +27,11 @@ public class Sword : MonoBehaviour
             SetBlocked(true);
             transform.parent.gameObject.SetActive(false);
         }
+        else if(other.gameObject.CompareTag("Switch"))
+        {
+            other.gameObject.GetComponent<Switch>().HitSwitch();
+            MusicManager.instance.PlayStrike();
+        }
 
     }
 
