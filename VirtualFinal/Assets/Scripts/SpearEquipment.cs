@@ -34,7 +34,7 @@ public class SpearEquipment : Equipment
 
         if (currSpear == null)
         {
-            currSpear = Instantiate(spearPrefab, new Vector3(rightHand.transform.position.x, spearPrefab.transform.position.y, rightHand.transform.position.z) + i_player.transform.forward, i_player.transform.rotation * Quaternion.Euler(0.0f,90.0f,0.0f));
+            currSpear = Instantiate(spearPrefab, new Vector3(rightHand.transform.position.x, i_player.transform.position.y, rightHand.transform.position.z) + i_player.transform.forward, i_player.transform.rotation * Quaternion.Euler(0.0f,90.0f,0.0f));
             currSpear.GetComponentInChildren<Spear>().forward = i_player.transform.forward;
             check = true;
             MusicManager.instance.PlayThrow();
