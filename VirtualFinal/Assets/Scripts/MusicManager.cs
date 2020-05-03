@@ -22,6 +22,8 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioClip StairsDown;
     [SerializeField] private AudioClip Thud;
     [SerializeField] private AudioClip Lift;
+    [SerializeField] private AudioClip FireballShoot;
+    [SerializeField] private AudioClip FireballHit;
 
     public static MusicManager instance
     {
@@ -121,5 +123,15 @@ public class MusicManager : MonoBehaviour
     public void PlayLift()
     {
         source.PlayOneShot(Lift);
+    }
+
+    public void PlayFireballShoot()
+    {
+        source.PlayOneShot(FireballShoot);
+    }
+
+    public void PlayFireballHit()
+    {
+        source.PlayOneShot(FireballHit);
     }
 }

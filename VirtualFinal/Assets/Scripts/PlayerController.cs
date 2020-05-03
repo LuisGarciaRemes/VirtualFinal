@@ -181,10 +181,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnAButton()
     {
-        if (m_tempEquipment != null)
+        if(holding)
         {
-            m_shouldCheckToEquip = true;
-            ShowIndicator("Press X Or\nY To Equip");
+            holding.GetComponent<PickUpObject>().Throw();
+            holding = null;
         }
         else if(couldHold != null && holding == null && !m_holdshield)
         {
@@ -193,10 +193,10 @@ public class PlayerController : MonoBehaviour
             holding = couldHold;
             couldHold = null;
         }
-        else if(holding)
+        else if(m_tempEquipment != null)
         {
-            holding.GetComponent<PickUpObject>().Throw();
-            holding = null;
+            m_shouldCheckToEquip = true;
+            ShowIndicator("Press X Or\nY To Equip");
         }
         
     }

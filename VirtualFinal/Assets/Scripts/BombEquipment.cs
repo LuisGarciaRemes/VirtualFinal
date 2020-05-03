@@ -32,7 +32,7 @@ public class BombEquipment : Equipment
     {
         if(currBomb == null)
         {
-           currBomb = Instantiate(bombPrefab, new Vector3(i_player.transform.position.x, i_player.transform.position.y, i_player.transform.position.z) + i_player.transform.forward, new Quaternion());
+           currBomb = Instantiate(bombPrefab, new Vector3(i_player.transform.position.x, i_player.transform.position.y, i_player.transform.position.z) + i_player.transform.forward*1.5f, new Quaternion());
             check = true;
             MusicManager.instance.PlayThud();
         }
