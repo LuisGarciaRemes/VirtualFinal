@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6f775dd07c07c44ab917bf83ff2bcaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_position: {x: 0, y: 50, z: 0}
+  m_position: {x: 0, y: 100, z: 0}
+  type: Blob
   blobPrefab: {fileID: 6215428006321955327, guid: 9f4a570ab07e2404f9abd65781f649c4,
     type: 3}

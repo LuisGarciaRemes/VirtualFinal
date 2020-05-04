@@ -20,7 +20,7 @@ public class Stairs : MonoBehaviour
             exit.GetComponent<Stairs>().player = other.gameObject;
             other.gameObject.GetComponent<PlayerController>().isDashing = false;
 
-            if(up)
+            if (up)
             {
                 MusicManager.instance.PlayStairsUp();
             }

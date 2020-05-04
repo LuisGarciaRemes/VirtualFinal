@@ -20,6 +20,8 @@ public class GameStateManager : MonoBehaviour
 
     internal bool[] playerAlive;
 
+    public bool[] itemsSpawn;
+
     public static GameStateManager instance
     {
         get

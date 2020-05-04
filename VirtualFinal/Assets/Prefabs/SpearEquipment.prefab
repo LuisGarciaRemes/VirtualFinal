@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9a535cf8428a1e4f9373f521cf1a7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_position: {x: 0, y: 50, z: 0}
+  m_position: {x: 0, y: 100, z: 0}
+  type: Spear
   spearPrefab: {fileID: 7319865177853232097, guid: f60c9a1fad9ec794b936996ac647319f,
     type: 3}

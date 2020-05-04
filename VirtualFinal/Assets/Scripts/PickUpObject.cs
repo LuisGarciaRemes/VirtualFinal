@@ -55,6 +55,7 @@ public class PickUpObject : MonoBehaviour
         }
 
         pos = new Vector3(Heldby.transform.position.x, yOG, Heldby.transform.position.z) + Heldby.transform.forward*range;
+        Heldby.GetComponent<PlayerController>().DisplayA(" ");
         Heldby = null;
         thrown = true;
         gameObject.GetComponent<SphereCollider>().enabled = true;

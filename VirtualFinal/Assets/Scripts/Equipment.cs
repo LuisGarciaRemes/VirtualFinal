@@ -7,13 +7,14 @@ public class Equipment : MonoBehaviour
     [SerializeField] private Vector3 m_position;
     internal char slot = ' ';
     internal PlayerController owner;
+    public string type = "";
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             other.gameObject.GetComponent<PlayerController>().m_tempEquipment = this;
-            other.gameObject.GetComponent<PlayerController>().ShowIndicator("Press A\nTo Interact");
+            other.gameObject.GetComponent<PlayerController>().DisplayA("Open\nChest");
         }
     }
 
@@ -23,7 +24,8 @@ public class Equipment : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().m_tempEquipment = null;
             other.gameObject.GetComponent<PlayerController>().m_shouldCheckToEquip = false;
-            other.gameObject.GetComponent<PlayerController>().HideIndicator();
+            other.gameObject.GetComponent<PlayerController>().DisplayA(" ");
+            other.gameObject.GetComponent<PlayerController>().CanNoLongerEquip();
         }
     }
 
@@ -34,7 +36,6 @@ public class Equipment : MonoBehaviour
 
     public virtual void TriggerAbitily(GameObject i_player)
     {
-        Debug.Log("Ability Used");
     }
 
     public void SetOwnerAndSlot(PlayerController i_owner, char i_slot)

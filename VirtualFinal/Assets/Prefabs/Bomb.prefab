@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2de68db77859b48b2f4742ae8bed1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damage: 15
   tickDelay: 5
   SmokeCloud: {fileID: 5404574385940507502, guid: 591c13091478a2a45b5a64511e4e224f,
     type: 3}

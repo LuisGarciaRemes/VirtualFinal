@@ -12,6 +12,7 @@ TagManager:
   - Spikes
   - Explosion
   - Blade
+  - Floor
   layers:
   - Default
   - TransparentFX

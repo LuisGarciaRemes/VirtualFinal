@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Material player2Mat;
     [SerializeField] private Material player3Mat;
     [SerializeField] private Material player4Mat;
-    [SerializeField] private GameObject PlayerIndicatorUI;
     private GameObject playerHUD;
     private int health = 100;
     private float immuneTimer = 0.0f;
@@ -27,7 +26,7 @@ public class PlayerController : MonoBehaviour
     internal Rigidbody m_rb;
     [SerializeField] private float m_walkSpeed = 10;
     internal bool isDashing = false;
-    private bool canDash = true;
+    internal bool canDash = true;
     [SerializeField] private float dashDist;
     [SerializeField] private float dashSpeed = 20;
     private Vector3 dashPos;
@@ -42,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private float m_originalSwordRot;
     [SerializeField] private float m_finalSwordRot;
     [SerializeField] private float m_swordSpeed = 20.0f;
+    private GameObject m_sword;
 
     //Shield
     [SerializeField] GameObject m_LeftHand;
@@ -66,6 +66,13 @@ public class PlayerController : MonoBehaviour
     private float slowTimer = 0.0f;
     [SerializeField] private float slowDelay;
     private bool isSlowed = false;
+
+    //HUD
+    private Text yText;
+    private Text bText;
+    private Text xText;
+    private Text aText;
+    private Text healthText;
 
     // Start is called before the first frame update
     void Start()
@@ -97,6 +104,16 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
+
+        Transform Button = playerHUD.transform.Find("Buttons");
+
+
+        bText = Button.Find("BSprite").GetComponentInChildren<Text>();
+        yText = Button.Find("YSprite").GetComponentInChildren<Text>();
+        xText = Button.Find("XSprite").GetComponentInChildren<Text>();
+        aText = Button.Find("ASprite").GetComponentInChildren<Text>();
+        healthText = playerHUD.transform.Find("HealthSprite").GetComponentInChildren<Text>();
+        m_sword = m_RightHand.transform.Find("Sword").gameObject;
     }
 
     // Update is called once per frame
@@ -110,7 +127,7 @@ public class PlayerController : MonoBehaviour
 
             if ((dashPos - transform.position).magnitude <= .1)
             {
-                isDashing = false;             
+                isDashing = false;
             }
         }
 
@@ -189,14 +206,16 @@ public class PlayerController : MonoBehaviour
         else if(couldHold != null && holding == null && !m_holdshield)
         {
             couldHold.GetComponent<PickUpObject>().PickUp(this.gameObject);
-            HideIndicator();
+            aText.text = "Throw";
             holding = couldHold;
             couldHold = null;
         }
         else if(m_tempEquipment != null)
         {
             m_shouldCheckToEquip = true;
-            ShowIndicator("Press X Or\nY To Equip");
+            xText.text = "Equip\n" + m_tempEquipment.type;
+            yText.text = "Equip\n" + m_tempEquipment.type;
+            aText.text = " ";
         }
         
     }
@@ -209,15 +228,23 @@ public class PlayerController : MonoBehaviour
 
             RaycastHit info;
 
-            if (Physics.Raycast(transform.position, transform.forward, out info, dashDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(transform.position, transform.forward, out info, dashDist + 0.5f, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
             {
-                dashPos = info.point - (transform.forward + transform.forward/2);
+                dashPos = info.point - (transform.forward * 1.5f);
+            }
+            else if(Physics.Raycast(transform.position + transform.right, transform.forward, out info, dashDist + 0.5f, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+            {
+                dashPos = info.point - (transform.forward * 1.5f);
+            }
+            else if (Physics.Raycast(transform.position - transform.right, transform.forward, out info, dashDist + 0.5f, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+            {
+                dashPos = info.point - (transform.forward * 1.5f);
             }
 
             isDashing = true;
             canDash = false;
             dashTimer = 0.0f;
-            playerHUD.transform.Find("BSprite").gameObject.SetActive(false);
+            bText.text = " ";
             MusicManager.instance.PlayDash();
         }
     }
@@ -232,24 +259,41 @@ public class PlayerController : MonoBehaviour
                 {
                     m_yEquipment.transform.position = transform.position - transform.forward * 2;
                 }
+                else if(Physics.Raycast(transform.position - transform.right, transform.forward, 2, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    m_yEquipment.transform.position = transform.position - transform.forward * 2;
+                }
+                else if (Physics.Raycast(transform.position + transform.right, transform.forward, 2, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    m_yEquipment.transform.position = transform.position - transform.forward * 2;
+                }
                 else
                 {
                     m_yEquipment.transform.position = transform.position + transform.forward * 2;
                 }
                 m_yEquipment.SetOwnerAndSlot(null, ' ');
             }
-            playerHUD.transform.Find("YSprite").gameObject.SetActive(true);
 
             m_yEquipment = m_tempEquipment;
-            playerHUD.transform.Find("YSprite").GetComponent<RawImage>().color = new Color(m_yEquipment.GetComponent<MeshRenderer>().material.color.r, m_yEquipment.GetComponent<MeshRenderer>().material.color.g, m_yEquipment.GetComponent<MeshRenderer>().material.color.b, 0.5f);
+            m_tempEquipment = null;
+            yText.text = m_yEquipment.type;
+
+            if(m_xEquipment)
+            {
+               xText.text =  m_xEquipment.type;
+            }
+            else
+            {
+                xText.text = " ";
+            }
+
             m_shouldCheckToEquip = false;
             m_yEquipment.MoveToInventory();
-            m_tempEquipment = null;
         }
         else if (m_yEquipment != null && !m_holdshield && !holding && !m_swingsword)
         {
             m_yEquipment.TriggerAbitily(this.gameObject);
-            playerHUD.transform.Find("YSprite").gameObject.SetActive(false);
+            yText.text = " ";
             m_yEquipment.SetOwnerAndSlot(this,'y');
         }
     }
@@ -264,23 +308,41 @@ public class PlayerController : MonoBehaviour
                 {
                     m_xEquipment.transform.position = transform.position - transform.forward * 2;
                 }
+                else if (Physics.Raycast(transform.position - transform.right, transform.forward, 2, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    m_xEquipment.transform.position = transform.position - transform.forward * 2;
+                }
+                else if (Physics.Raycast(transform.position + transform.right, transform.forward, 2, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    m_xEquipment.transform.position = transform.position - transform.forward * 2;
+                }
                 else
                 {
                     m_xEquipment.transform.position = transform.position + transform.forward * 2;
                 }
                 m_xEquipment.SetOwnerAndSlot(null, ' ');
             }
-            playerHUD.transform.Find("XSprite").gameObject.SetActive(true);
+
             m_xEquipment = m_tempEquipment;
-            playerHUD.transform.Find("XSprite").GetComponent<RawImage>().color = new Color(m_xEquipment.GetComponent<MeshRenderer>().material.color.r, m_xEquipment.GetComponent<MeshRenderer>().material.color.g, m_xEquipment.GetComponent<MeshRenderer>().material.color.b, 0.5f);
-            m_xEquipment.MoveToInventory();
-            m_shouldCheckToEquip = false;
             m_tempEquipment = null;
+            xText.text = m_xEquipment.type;
+
+            if (m_yEquipment)
+            {
+                yText.text = m_yEquipment.type;
+            }
+            else
+            {
+                yText.text = " ";
+            }
+
+            m_shouldCheckToEquip = false;
+            m_xEquipment.MoveToInventory();
         }
         else if (m_xEquipment != null && !m_holdshield && !holding && !m_swingsword)
         {
             m_xEquipment.TriggerAbitily(this.gameObject);
-            playerHUD.transform.Find("XSprite").gameObject.SetActive(false);
+            xText.text = " ";
             m_xEquipment.SetOwnerAndSlot(this, 'x');
         }
     }
@@ -317,23 +379,13 @@ public class PlayerController : MonoBehaviour
     {
         m_RightHand.transform.localRotation = Quaternion.Lerp(m_RightHand.transform.localRotation, Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_swingRot, m_RightHand.transform.localRotation.eulerAngles.z), Time.deltaTime * m_swordSpeed);
 
-        /*
-        if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_originalSwordRot + 1 && m_RightHand.transform.localRotation.eulerAngles.y >= m_originalSwordRot - 1) && m_swingRot == m_originalSwordRot))
-        {
-            m_swingsword = false;
-            m_RightHand.transform.Find("Sword").GetComponent<Sword>().SetBlocked(false);
-            m_RightHand.transform.localRotation = Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_originalSwordRot, m_RightHand.transform.localRotation.eulerAngles.z);
-        }
-        */
-
-
         if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_finalSwordRot && m_RightHand.transform.localRotation.eulerAngles.y >= m_finalSwordRot - 1) && m_swingRot == m_finalSwordRot))
         {
             m_RightHand.SetActive(false);
             m_swingRot = m_originalSwordRot;
 
             m_swingsword = false;
-            m_RightHand.transform.Find("Sword").GetComponent<Sword>().SetBlocked(false);
+            m_sword.GetComponent<Sword>().SetBlocked(false);
             m_RightHand.transform.localRotation = Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_originalSwordRot, m_RightHand.transform.localRotation.eulerAngles.z);
         }
     }
@@ -348,24 +400,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ShowIndicator(string i_text)
-    {
-        PlayerIndicatorUI.SetActive(true);
-        PlayerIndicatorUI.GetComponentInChildren<TextMesh>().text = i_text;
-    }
-
-    public void HideIndicator()
-    {
-        PlayerIndicatorUI.SetActive(false);
-    }
-
     public void TakeDamage(int i_damage)
     {
         if (!isImmune)
         {
             health -= i_damage;
-            Debug.Log("Ouch!");
-            Debug.Log("Player " + m_playerID + " Health is " + health);
             BecomeImmune();
             UpdateHealthIndicator();
             MusicManager.instance.PlayDamagedPlayer();
@@ -380,12 +419,12 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateHealthIndicator()
     {
-        playerHUD.transform.Find("HealthSprite").GetComponentInChildren<Text>().text = health.ToString();
+        healthText.text = health.ToString();
     }
 
     public void SetCouldHold(GameObject i_pickup)
     {
-        ShowIndicator("Press A To\nPick Up");
+        DisplayA("Pick\nUp");
         couldHold = i_pickup;
     }
 
@@ -393,7 +432,7 @@ public class PlayerController : MonoBehaviour
     {
         if (couldHold != null && couldHold.Equals(i_pickup))
         {
-            HideIndicator();
+            aText.text = " ";
             couldHold = null;
         }
     }
@@ -473,38 +512,60 @@ public class PlayerController : MonoBehaviour
 
         RaycastHit info;
 
-        if (Physics.Raycast(transform.position, direction, out info, knockBackDist, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(transform.position, direction, out info, knockBackDist + 0.5f, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
         {
-            dashPos = info.point - (direction * 1.0f);
+            dashPos = info.point - (direction * 1.5f);
         }
 
         isDashing = true;
-        canDash = false;
-        dashTimer = 0.0f;
     }
 
     public void DisplayY()
     {
-        GameObject y = playerHUD.transform.Find("YSprite").gameObject;
-        if(!y.activeSelf)
+        if(yText.text.Equals(" "))
         {
-            y.SetActive(true);
+            yText.text = m_yEquipment.type;
         }
     }
     public void DisplayX()
     {
-        GameObject x = playerHUD.transform.Find("XSprite").gameObject;
-        if (!x.activeSelf)
+        if (xText.text.Equals(" "))
         {
-            x.SetActive(true);
+            xText.text = m_xEquipment.type;
         }
     }
     public void DisplayB()
     {
-        GameObject b = playerHUD.transform.Find("BSprite").gameObject;
-        if (!b.activeSelf)
+        if (bText.text.Equals(" "))
         {
-            b.SetActive(true);
+            bText.text = "Dash";
+        }
+    }
+
+    public void DisplayA(string i_text)
+    {
+        aText.text = i_text;
+    }
+
+
+    public void CanNoLongerEquip()
+    {
+        if (m_yEquipment)
+        {
+            yText.text = m_yEquipment.type;
+        }
+        else
+        {
+            yText.text = " ";
+        }
+
+        if (m_xEquipment)
+        {
+            xText.text = m_xEquipment.type;
+        }
+        else
+        {
+            xText.text = " ";
         }
     }
 }

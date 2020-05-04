@@ -11,7 +11,6 @@ public class Spear : MonoBehaviour
     private float timer = 0.0f;
     [SerializeField] private float disappearDelay;
     internal Vector3 forward;
-    private bool hitShield = false;
 
     // Update is called once per frame
     void Update()
@@ -40,16 +39,14 @@ public class Spear : MonoBehaviour
         if (other.gameObject.CompareTag("Wall"))
         {
             shouldStop = true;
-            hitShield = true;
             MusicManager.instance.PlaySpearStick();
         }
         else if (other.gameObject.CompareTag("Shield"))
         {
             shouldStop = true;
-            hitShield = true;
             MusicManager.instance.PlayStrike();
         }
-        else if (other.gameObject.CompareTag("Player") && !hitShield)
+        else if (other.gameObject.CompareTag("Player"))
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
             Destroy(spear);
@@ -58,7 +55,6 @@ public class Spear : MonoBehaviour
         {
             other.gameObject.GetComponent<Switch>().HitSwitch();
             shouldStop = true;
-            hitShield = true;
             MusicManager.instance.PlayStrike();
         }
     }

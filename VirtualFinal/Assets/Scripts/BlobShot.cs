@@ -5,7 +5,6 @@ using UnityEngine;
 public class BlobShot : MonoBehaviour
 {
     [SerializeField] private float speed = 25;
-    private bool hitShield = false;
     [SerializeField] private float lifeTime = 3;
     private float timer = 0.0f;
     [SerializeField] private GameObject splat;
@@ -49,9 +48,8 @@ public class BlobShot : MonoBehaviour
         if(collision.gameObject.CompareTag("Shield"))
         {
             collision.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(-collision.impulse.normalized, knockback);
-            hitShield = true;
         }
-        else if (collision.gameObject.CompareTag("Player") && !hitShield)
+        else if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<PlayerController>().KnockBack(-collision.impulse.normalized,knockback);
             collision.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
@@ -60,8 +58,6 @@ public class BlobShot : MonoBehaviour
         {
             collision.gameObject.GetComponent<Switch>().HitSwitch();
         }
-
-        hitShield = false;
     }
 
     public void MoveForward(Vector3 forward)

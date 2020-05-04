@@ -108,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 35
   spear: {fileID: 7319865177853232097}
-  damage: 15
+  damage: 10
   disappearDelay: 0.25
 --- !u!1 &6792006751854198798
 GameObject:
