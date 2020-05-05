@@ -15,6 +15,10 @@ public class Explosion : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
         }
+        else if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+        }
         else if (other.gameObject.CompareTag("Wall") && other.gameObject.GetComponent<CrackedWall>())
         {
             other.gameObject.GetComponent<CrackedWall>().BreakWall();

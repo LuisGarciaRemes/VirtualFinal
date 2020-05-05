@@ -11,8 +11,13 @@ public class Spikes : MonoBehaviour
             other.gameObject.GetComponent<PlayerController>().SteppedOnSpike();
             Destroy(this.gameObject);
         }
-        if (other.gameObject.CompareTag("Explosion"))
+        else if (other.gameObject.CompareTag("Explosion"))
         {
+            Destroy(this.gameObject);
+        }
+        else if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.GetComponent<Enemy>().SteppedOnSpike();
             Destroy(this.gameObject);
         }
     }

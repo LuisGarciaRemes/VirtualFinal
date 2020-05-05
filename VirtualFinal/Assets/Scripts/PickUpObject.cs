@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class PickUpObject : MonoBehaviour
 {
-    private GameObject Heldby = null;
+    internal GameObject Heldby = null;
     [SerializeField] GameObject parentObject;
     [SerializeField] float range;
-    bool thrown = false;
+    private float ogRange;    
+    internal bool thrown = false;
     Vector3 pos = new Vector3();
     private float yOG;
     Vector3 bounceOffset;
+
+    private void Start()
+    {
+        ogRange = range;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -56,7 +62,6 @@ public class PickUpObject : MonoBehaviour
 
         pos = new Vector3(Heldby.transform.position.x, yOG, Heldby.transform.position.z) + Heldby.transform.forward*range;
         Heldby.GetComponent<PlayerController>().DisplayA(" ");
-        Heldby = null;
         thrown = true;
         gameObject.GetComponent<SphereCollider>().enabled = true;
         MusicManager.instance.PlayThrow();
@@ -71,7 +76,9 @@ public class PickUpObject : MonoBehaviour
             if (parentObject.transform.position == pos)
             {
                 thrown = false;
+                Heldby = null;
                 MusicManager.instance.PlayThud();
+                range = ogRange;
             }
 
         }

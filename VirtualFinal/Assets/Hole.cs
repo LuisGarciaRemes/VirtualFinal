@@ -25,6 +25,10 @@ public class Hole : MonoBehaviour
                 MusicManager.instance.PlayFalling();
             }
         }
+        else if(other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.GetComponent<Enemy>().Die();
+        }
     }
 
     private void Update()

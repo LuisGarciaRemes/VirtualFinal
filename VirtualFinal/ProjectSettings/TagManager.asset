@@ -13,6 +13,10 @@ TagManager:
   - Explosion
   - Blade
   - Floor
+  - Blob
+  - Bomb
+  - Enemy
+  - Box
   layers:
   - Default
   - TransparentFX

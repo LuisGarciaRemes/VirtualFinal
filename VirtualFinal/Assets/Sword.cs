@@ -21,6 +21,10 @@ public class Sword : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(10);
         }
+        else if (other.gameObject.CompareTag("Enemy") && !isBlocked)
+        {
+            other.gameObject.GetComponent<Enemy>().TakeDamage(10);
+        }
         else if (other.gameObject.CompareTag("Shield") && !other.gameObject.Equals(shield))
         {
             MusicManager.instance.PlayStrike();

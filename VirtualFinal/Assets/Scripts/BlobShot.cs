@@ -54,6 +54,11 @@ public class BlobShot : MonoBehaviour
             collision.gameObject.GetComponent<PlayerController>().KnockBack(-collision.impulse.normalized,knockback);
             collision.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
         }
+        else if (collision.gameObject.CompareTag("Enemy"))
+        {
+            collision.gameObject.GetComponent<Enemy>().KnockBack(-collision.impulse.normalized, knockback);
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+        }
         else if (collision.gameObject.CompareTag("Switch"))
         {
             collision.gameObject.GetComponent<Switch>().HitSwitch();

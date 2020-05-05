@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float immuneDelay = 0.0f;
     private int immuneTick = 0;
     private bool isImmune = false;
+    internal int roomID = 0;
 
 
     //Movement
@@ -45,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     //Shield
     [SerializeField] GameObject m_LeftHand;
+    GameObject m_shield;
     private bool m_holdshield;
     private float m_shieldRot;
     private float m_originalshieldRot;
@@ -78,6 +80,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         m_playerID = GameStateManager.instance.AddPlayer(out playerHUD);
+        GameStateManager.instance.listOfPlayers.Add(this);
         transform.position = GameStateManager.instance.GetInitialSpawnPoint(m_playerID);
         m_camera = GameObject.Find("Player" + m_playerID + "Camera").GetComponent<Camera>();
         gameObject.GetComponent<PlayerInput>().camera = m_camera;
@@ -114,6 +117,7 @@ public class PlayerController : MonoBehaviour
         aText = Button.Find("ASprite").GetComponentInChildren<Text>();
         healthText = playerHUD.transform.Find("HealthSprite").GetComponentInChildren<Text>();
         m_sword = m_RightHand.transform.Find("Sword").gameObject;
+        m_shield = m_LeftHand.transform.Find("Shield").gameObject;
     }
 
     // Update is called once per frame
@@ -180,6 +184,14 @@ public class PlayerController : MonoBehaviour
             m_velocity.x = value.Get<Vector2>().x;
             m_velocity.z = value.Get<Vector2>().y;
             m_velocity.y = 0.0f;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
+        {
+            TakeDamage(5);
         }
     }
 
@@ -516,6 +528,14 @@ public class PlayerController : MonoBehaviour
         {
             dashPos = info.point - (direction * 1.5f);
         }
+        else if (Physics.Raycast(transform.position - transform.right, direction, out info, knockBackDist + 0.5f, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+        {
+            dashPos = info.point - (direction * 1.5f);
+        }
+        else if (Physics.Raycast(transform.position + transform.right, direction, out info, knockBackDist + 0.5f, 1 << 0, UnityEngine.QueryTriggerInteraction.Ignore))
+        {
+            dashPos = info.point - (direction * 1.5f);
+        }
 
         isDashing = true;
     }
@@ -547,6 +567,17 @@ public class PlayerController : MonoBehaviour
         aText.text = i_text;
     }
 
+    public void HealPlayer(int heal)
+    {
+        health += heal;
+
+        if(health > 100)
+        {
+            health = 100;
+        }
+
+        UpdateHealthIndicator();
+    }
 
     public void CanNoLongerEquip()
     {

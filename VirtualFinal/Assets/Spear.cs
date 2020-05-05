@@ -7,15 +7,15 @@ public class Spear : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] private GameObject spear;
     [SerializeField] private int damage;
-    private bool shouldStop = false;
+    internal bool shouldStop = false;
     private float timer = 0.0f;
     [SerializeField] private float disappearDelay;
-    internal Vector3 forward;
+    internal Vector3 forward = Vector3.zero;
 
     // Update is called once per frame
     void Update()
     {
-        if (!shouldStop)
+        if (!shouldStop && forward != Vector3.zero)
         {
             spear.transform.position = Vector3.MoveTowards(spear.transform.position, spear.transform.position + forward, Time.deltaTime * speed);
         }
@@ -46,9 +46,14 @@ public class Spear : MonoBehaviour
             shouldStop = true;
             MusicManager.instance.PlayStrike();
         }
-        else if (other.gameObject.CompareTag("Player"))
+        else if (other.gameObject.CompareTag("Player") && !shouldStop)
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            Destroy(spear);
+        }
+        else if (other.gameObject.CompareTag("Enemy") && !shouldStop)
+        {
+            other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
             Destroy(spear);
         }
         else if (other.gameObject.CompareTag("Switch"))
@@ -56,6 +61,10 @@ public class Spear : MonoBehaviour
             other.gameObject.GetComponent<Switch>().HitSwitch();
             shouldStop = true;
             MusicManager.instance.PlayStrike();
+        }
+        else if (other.gameObject.CompareTag("Blob"))
+        {
+            shouldStop = true;
         }
     }
 }

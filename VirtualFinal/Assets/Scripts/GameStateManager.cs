@@ -13,6 +13,10 @@ public class GameStateManager : MonoBehaviour
 
     [SerializeField] private GameObject[] playerPanels;
     [SerializeField] private GameObject[] playerHUDs;
+    [SerializeField] private GameObject heartPrefab;
+
+    internal List<GameObject> listOfRooms = new List<GameObject>();
+    internal List<PlayerController> listOfPlayers = new List<PlayerController>();
 
 
     internal bool m_gameStarted = false;
@@ -155,5 +159,13 @@ public class GameStateManager : MonoBehaviour
                 playerHUDs[winningPlayer - 1].SetActive(false);
                 Time.timeScale = 0.0f;
             }
+    }
+
+    public void SpawnHeart(Vector3 position)
+    {
+        if (Random.Range(0, 100) < 40)
+        {
+            Instantiate(heartPrefab, position, heartPrefab.transform.rotation);
+        }
     }
 }

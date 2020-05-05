@@ -8,9 +8,12 @@ public class BlobEnemy : MonoBehaviour
 {
     [SerializeField] private int damage = 5;
     [SerializeField] private float knockback = 3;
-
-    [SerializeField] private Transform destination = null;
+    [SerializeField] private float min = 0.5f;
+    [SerializeField] private float max = 2.0f;
     NavMeshAgent navMeshAgent = null;
+    private float wanderTimer = 0.0f;
+    private float wanderDelay = 0.0f;
+    [SerializeField] private GameObject splat;
 
     // Start is called before the first frame update
     void Start()
@@ -21,31 +24,31 @@ public class BlobEnemy : MonoBehaviour
         {
             Debug.LogError("BlobEnemy does not have navmeshagent");
         }
-        else
-        {
-            SetDestination();
-        }
-
-    }
-
-    private void SetDestination()
-    {
-        if(destination != null)
-        {
-            Vector3 targetVector = destination.transform.position;
-            navMeshAgent.SetDestination(targetVector);
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(wanderTimer >= wanderDelay)
+        {
+            wanderTimer = 0.0f;
+            wanderDelay = UnityEngine.Random.Range(min,max);
+            navMeshAgent.SetDestination(RandomNavSphere(transform.position,10.0f,-1));
+            Instantiate(splat, transform.position, splat.transform.rotation);
+        }
+        else
+        {
+            wanderTimer += Time.deltaTime;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Vector3 direction;
-        MusicManager.instance.PlayBlobBounce();
+        if (!other.gameObject.CompareTag("Wall"))
+        {
+            MusicManager.instance.PlayBlobBounce();
+        }
 
         if (other.gameObject.CompareTag("Sword"))
         {
@@ -66,6 +69,11 @@ public class BlobEnemy : MonoBehaviour
             other.gameObject.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
         }
+        else if(other.gameObject.CompareTag("Bomb") || other.gameObject.CompareTag("Spikes"))
+        {
+            Destroy(other.gameObject);
+        }
+
     }
 
     private void OnTriggerStay(Collider other)
@@ -74,6 +82,19 @@ public class BlobEnemy : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
         }
+    }
+
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    {
+        Vector3 randDirection = UnityEngine.Random.insideUnitSphere * dist;
+
+        randDirection += origin;
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+
+        return navHit.position;
     }
 
 }
