@@ -157,7 +157,6 @@ public class GameStateManager : MonoBehaviour
                 playerPanels[winningPlayer - 1].SetActive(true);
                 playerPanels[winningPlayer - 1].GetComponentInChildren<Text>().text = "Player " + winningPlayer + " Wins!";
                 playerHUDs[winningPlayer - 1].SetActive(false);
-                Time.timeScale = 0.0f;
             }
     }
 
