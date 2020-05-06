@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnSelectButton()
     {
-
+        Application.Quit();
     }
 
     private void OnAButton()
