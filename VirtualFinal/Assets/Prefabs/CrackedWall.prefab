@@ -419,6 +419,7 @@ GameObject:
   - component: {fileID: 6523221675022972776}
   - component: {fileID: 6523221675022972773}
   - component: {fileID: 1090681394874636318}
+  - component: {fileID: 8472441482211274194}
   m_Layer: 0
   m_Name: CrackedWall
   m_TagString: Wall
@@ -533,3 +534,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef8edb9baf8f1440a779b6f4d87465d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!208 &8472441482211274194
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6523221675022972782}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

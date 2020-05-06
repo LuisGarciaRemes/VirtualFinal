@@ -14,7 +14,7 @@ public class Landing : MonoBehaviour
             other.gameObject.transform.position = new Vector3(other.gameObject.transform.position.x, transform.parent.GetComponent<Hole>().landingLevel * 50 + 1.5f, other.gameObject.transform.position.z);
             transform.parent.GetComponent<Hole>().players.Remove(other.gameObject);
             CameraManager.instance.UpdateCameraPosition(other.gameObject.GetComponent<PlayerController>().m_playerID, room.transform.position);
-            other.gameObject.GetComponent<PlayerController>().TakeDamage(10);
+            other.gameObject.GetComponent<PlayerController>().TakeDamage(5);
             MusicManager.instance.PlayThud();
             other.gameObject.GetComponent<PlayerController>().roomID = GameStateManager.instance.listOfRooms.IndexOf(room);
         }

@@ -24,6 +24,16 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioClip Lift;
     [SerializeField] private AudioClip FireballShoot;
     [SerializeField] private AudioClip FireballHit;
+    [SerializeField] private AudioClip HeartFill;
+    [SerializeField] private AudioClip BoxBreak;
+    [SerializeField] private AudioClip SpottedByEnemy;
+    [SerializeField] private AudioClip EnemyKill;
+    [SerializeField] private AudioClip EnemyDamage;
+    [SerializeField] private AudioClip PlayerKill;
+    [SerializeField] private AudioClip HitSwitch;
+    [SerializeField] private AudioClip OpenChest;
+    [SerializeField] private AudioClip EquipedItem;
+    [SerializeField] private AudioClip Secret;
 
     public static MusicManager instance
     {
@@ -133,5 +143,54 @@ public class MusicManager : MonoBehaviour
     public void PlayFireballHit()
     {
         source.PlayOneShot(FireballHit);
+    }
+
+    public void PlayHeartFill()
+    {
+        source.PlayOneShot(HeartFill);
+    }
+
+    public void PlayBoxBreak()
+    {
+        source.PlayOneShot(BoxBreak);
+    }
+
+    public void PlaySpottedByEnemy()
+    {
+        source.PlayOneShot(SpottedByEnemy);
+    }
+
+    public void PlayEnemyKill()
+    {
+        source.PlayOneShot(EnemyKill);
+    }
+
+    public void PlayEnemyDamage()
+    {
+        source.PlayOneShot(EnemyDamage);
+    }
+
+    public void PlayPlayerKill()
+    {
+        source.PlayOneShot(PlayerKill);
+    }
+    public void PlayHitSwitch()
+    {
+        source.PlayOneShot(HitSwitch);
+    }
+
+    public void PlayOpenChest()
+    {
+        source.PlayOneShot(OpenChest);
+    }
+
+    public void PlayEquipedItem()
+    {
+        source.PlayOneShot(EquipedItem);
+    }
+
+    public void PlaySecret()
+    {
+        source.PlayOneShot(Secret);
     }
 }

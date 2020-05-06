@@ -23,6 +23,10 @@ public class Explosion : MonoBehaviour
         {
             other.gameObject.GetComponent<CrackedWall>().BreakWall();
         }
+        else if (other.gameObject.CompareTag("Box"))
+        {
+            other.gameObject.GetComponent<Box>().DestroyBox();
+        }
 
 
         /*

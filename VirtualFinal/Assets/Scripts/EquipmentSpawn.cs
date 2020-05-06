@@ -86,7 +86,7 @@ public class EquipmentSpawn : MonoBehaviour
 
                     foreach (PlayerController player in GameStateManager.instance.listOfPlayers)
                     {
-                        if (player.roomID == roomID)
+                        if (player != null && player.roomID == roomID)
                         {
                             shouldRespawn = false;
                         }

@@ -43,11 +43,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_finalSwordRot;
     [SerializeField] private float m_swordSpeed = 20.0f;
     private GameObject m_sword;
+    private Quaternion lastSwordRot = new Quaternion();
 
     //Shield
     [SerializeField] GameObject m_LeftHand;
-    GameObject m_shield;
-    private bool m_holdshield;
+    internal GameObject m_shield;
+    internal bool m_holdshield;
     private float m_shieldRot;
     private float m_originalshieldRot;
     [SerializeField] private float m_finalShieldRot;
@@ -228,6 +229,7 @@ public class PlayerController : MonoBehaviour
             xText.text = "Equip\n" + m_tempEquipment.type;
             yText.text = "Equip\n" + m_tempEquipment.type;
             aText.text = " ";
+            MusicManager.instance.PlayOpenChest();
         }
         
     }
@@ -376,6 +378,8 @@ public class PlayerController : MonoBehaviour
         {
             m_holdshield = true;
             m_shieldRot = m_finalShieldRot;
+            xText.text = " ";
+            yText.text = " ";
         }
     }
 
@@ -383,13 +387,18 @@ public class PlayerController : MonoBehaviour
     {
         if (m_holdshield)
         {
-            m_shieldRot = m_originalshieldRot;
+            m_shieldRot = m_originalshieldRot;            
         }
     }
 
     private void SwingSword()
     {
         m_RightHand.transform.localRotation = Quaternion.Lerp(m_RightHand.transform.localRotation, Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_swingRot, m_RightHand.transform.localRotation.eulerAngles.z), Time.deltaTime * m_swordSpeed);
+
+        if(lastSwordRot == m_RightHand.transform.localRotation)
+        {
+            m_swingRot = m_finalSwordRot;
+        }
 
         if (((m_RightHand.transform.localRotation.eulerAngles.y <= m_finalSwordRot && m_RightHand.transform.localRotation.eulerAngles.y >= m_finalSwordRot - 1) && m_swingRot == m_finalSwordRot))
         {
@@ -400,6 +409,9 @@ public class PlayerController : MonoBehaviour
             m_sword.GetComponent<Sword>().SetBlocked(false);
             m_RightHand.transform.localRotation = Quaternion.Euler(m_RightHand.transform.localRotation.eulerAngles.x, m_originalSwordRot, m_RightHand.transform.localRotation.eulerAngles.z);
         }
+
+        lastSwordRot = m_RightHand.transform.localRotation;
+
     }
 
     private void HoldShield()
@@ -409,6 +421,7 @@ public class PlayerController : MonoBehaviour
         if (((m_LeftHand.transform.localRotation.eulerAngles.y <= m_originalshieldRot + 1 && m_LeftHand.transform.localRotation.eulerAngles.y >= m_originalshieldRot) && m_shieldRot == m_originalshieldRot))
         {
             m_holdshield = false;
+            CanNoLongerEquip();
         }
     }
 
@@ -432,6 +445,21 @@ public class PlayerController : MonoBehaviour
     private void UpdateHealthIndicator()
     {
         healthText.text = health.ToString();
+
+        if(health <= 25)
+        {
+            if(!GetComponent<AudioSource>().isPlaying)
+            {
+                GetComponent<AudioSource>().Play();
+            }
+        }
+        else
+        {
+            if (GetComponent<AudioSource>().isPlaying)
+            {
+                GetComponent<AudioSource>().Stop();
+            }
+        }
     }
 
     public void SetCouldHold(GameObject i_pickup)
@@ -514,6 +542,8 @@ public class PlayerController : MonoBehaviour
         {       
             GameStateManager.instance.CheckGameOver(m_playerID);
             playerHUD.SetActive(false);
+            roomID = -1;
+            MusicManager.instance.PlayPlayerKill();
             Destroy(this.gameObject);
         }
     }

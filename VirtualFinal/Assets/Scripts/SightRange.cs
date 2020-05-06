@@ -12,6 +12,11 @@ public class SightRange : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && !players.Contains(other.gameObject) && other.gameObject.GetComponent<PlayerController>().roomID == roomID)
         {           
+            if (players.Count == 0)
+            {
+                MusicManager.instance.PlaySpottedByEnemy();
+            }
+
             players.Add(other.gameObject);
         }
     }

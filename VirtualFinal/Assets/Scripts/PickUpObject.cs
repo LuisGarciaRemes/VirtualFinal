@@ -18,18 +18,47 @@ public class PickUpObject : MonoBehaviour
         ogRange = range;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnDisable()
+    {
+        thrown = false;
+        Heldby = null;
+        range = ogRange;
+    }
+
+    private void OnTriggerStay(Collider other)
     {
         if(other.gameObject.CompareTag("Player") && !thrown)
         {
             other.gameObject.GetComponent<PlayerController>().SetCouldHold(this.gameObject);
         }
-        else if(other.gameObject.CompareTag("Wall") && thrown)
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+       if (other.gameObject.CompareTag("Wall") && thrown && !transform.parent.gameObject.CompareTag("Box"))
         {
             bounceOffset = (pos - transform.position).normalized;
             pos = transform.position - (bounceOffset);
-            pos = new Vector3(pos.x,yOG,pos.z);
+            pos = new Vector3(pos.x, yOG, pos.z);
             MusicManager.instance.PlayThud();
+        }
+       else if (other.gameObject.CompareTag("Box") && thrown && transform.parent.gameObject.CompareTag("Bomb"))
+        {
+            bounceOffset = (pos - transform.position).normalized;
+            pos = transform.position - (bounceOffset);
+            pos = new Vector3(pos.x, yOG, pos.z);
+            MusicManager.instance.PlayThud();
+        }
+        else if (other.gameObject.CompareTag("Wall") && thrown && transform.parent.gameObject.CompareTag("Box"))
+        {
+            transform.parent.gameObject.GetComponent<Box>().DestroyBox();
+        }
+        else if (other.gameObject.CompareTag("Shield") && thrown && transform.parent.gameObject.CompareTag("Box"))
+        {
+            if (!other.gameObject.Equals(Heldby.GetComponent<PlayerController>().m_shield))
+            {
+                transform.parent.gameObject.GetComponent<Box>().DestroyBox();
+            }
         }
     }
 
@@ -61,6 +90,7 @@ public class PickUpObject : MonoBehaviour
         }
 
         pos = new Vector3(Heldby.transform.position.x, yOG, Heldby.transform.position.z) + Heldby.transform.forward*range;
+
         Heldby.GetComponent<PlayerController>().DisplayA(" ");
         thrown = true;
         gameObject.GetComponent<SphereCollider>().enabled = true;
@@ -75,10 +105,20 @@ public class PickUpObject : MonoBehaviour
 
             if (parentObject.transform.position == pos)
             {
-                thrown = false;
-                Heldby = null;
-                MusicManager.instance.PlayThud();
-                range = ogRange;
+                if (transform.parent.gameObject.CompareTag("Box"))
+                {
+                    thrown = false;
+                    Heldby = null;
+                    range = ogRange;
+                    transform.parent.gameObject.GetComponent<Box>().DestroyBox();
+                }
+                else 
+                {
+                    thrown = false;
+                    Heldby = null;
+                    MusicManager.instance.PlayThud();
+                    range = ogRange;
+                }
             }
 
         }

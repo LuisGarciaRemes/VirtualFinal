@@ -44,6 +44,13 @@ public class Enemy : MonoBehaviour
     internal Vector3 lastknownLocation;
     internal bool shouldWander = true;
 
+    [SerializeField] internal float minDistance = 5.0f;
+    [SerializeField] internal float maxDistance = 10.0f;
+
+    internal float yRot;
+    [SerializeField] internal float rotateSpeed = 10;
+    internal bool stopRotating = false;
+
     public void Start()
     {
         currHealth = maxHealth;
@@ -93,6 +100,88 @@ public class Enemy : MonoBehaviour
                     navMeshAgent.enabled = true;
                 }
             }
+
+            if (shouldWander)
+            {
+
+                if (wanderTimer >= wanderDelay)
+                {
+                    wanderTimer = 0.0f;
+                    wanderDelay = UnityEngine.Random.Range(min, max);
+                    destination = RandomNavSphere(transform.position, 10.0f, -1);
+                    if (navMeshAgent.enabled)
+                    {
+                        navMeshAgent.SetDestination(destination);
+                    }
+                }
+                else
+                {
+                    wanderTimer += Time.deltaTime;
+                }
+
+                if (sightRange.isSet && sightRange.players.Count != 0)
+                {
+                    shouldWander = false;
+                    wanderTimer = 0.0f;
+                    wanderDelay = 0.0f;
+                    navMeshAgent.updateRotation = false;
+                    destination = transform.position;
+                    if (navMeshAgent.enabled)
+                    {
+                        navMeshAgent.SetDestination(destination);
+                    }
+                }
+            }
+            else
+            {
+                closestPlayer = sightRange.FindNearestPlayer();
+                if (closestPlayer && closestPlayer.GetComponent<PlayerController>().roomID == roomID)
+                {
+                    Vector3 direction = closestPlayer.transform.position - transform.position;
+                    yRot = Mathf.Atan2(direction.normalized.x, direction.normalized.z) * 57.2958f;
+
+                    if (!stopRotating)
+                    {
+                        transform.rotation = Quaternion.Euler(0.0f, Mathf.LerpAngle(transform.rotation.eulerAngles.y, yRot, Time.deltaTime * rotateSpeed), 0.0f);
+                    }
+
+                    if (direction.magnitude <= minDistance)
+                    {
+                        destination = transform.position - direction.normalized;
+                        if (navMeshAgent.enabled)
+                        {
+                            navMeshAgent.SetDestination(destination);
+                        }
+                    }
+                    else if (direction.magnitude >= maxDistance)
+                    {
+                        destination = transform.position + direction.normalized;
+                        if (navMeshAgent.enabled)
+                        {
+                            navMeshAgent.SetDestination(destination);
+                        }
+                    }
+                }
+
+                if (sightRange.players.Count == 0)
+                {
+                    shouldWander = true;
+                    navMeshAgent.updateRotation = true;
+                    wanderDelay = UnityEngine.Random.Range(min, max);
+                    wanderTimer = 0.0f;
+                    destination = RandomNavSphere(lastknownLocation, 2.0f, -1);
+                    if (navMeshAgent.enabled)
+                    {
+                        navMeshAgent.SetDestination(destination);
+                    }
+                    closestPlayer = null;
+                }
+
+                if (closestPlayer)
+                {
+                    lastknownLocation = closestPlayer.transform.position;
+                }
+            }
         }
         else
         {
@@ -102,7 +191,7 @@ public class Enemy : MonoBehaviour
 
                 foreach(PlayerController player in GameStateManager.instance.listOfPlayers)
                 {
-                    if(player.roomID == roomID)
+                    if(player != null && player.roomID == roomID)
                     {
                         shouldRespawn = false;
                     }
@@ -127,6 +216,7 @@ public class Enemy : MonoBehaviour
         transform.position += transform.up * distanceToHeaven;
         isDead = true;
         navMeshAgent.enabled = false;
+        MusicManager.instance.PlayEnemyKill();
     }
 
     public void TakeDamage(int i_damage)
@@ -136,6 +226,7 @@ public class Enemy : MonoBehaviour
             currHealth -= i_damage;
             BecomeImmune();
             OnTakeDamage();
+            MusicManager.instance.PlayEnemyDamage();
         }
     }
 
@@ -211,9 +302,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    virtual public void MoveAwayFromDoor()
-    {
 
+    public void MoveAwayFromDoor()
+    {
+        destination = RandomNavSphere(room.transform.position, 10.0f, -1);
+        if (navMeshAgent.enabled)
+        {
+            navMeshAgent.SetDestination(destination);
+        }
+        wanderDelay = UnityEngine.Random.Range(min, max);
     }
 
     public void KnockBack(Vector3 direction, float knockBackDist)
@@ -238,5 +335,18 @@ public class Enemy : MonoBehaviour
         isKnockedBack = true;
 
         navMeshAgent.enabled = false;
+    }
+
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    {
+        Vector3 randDirection = UnityEngine.Random.insideUnitSphere * dist;
+
+        randDirection += origin;
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+
+        return navHit.position;
     }
 }

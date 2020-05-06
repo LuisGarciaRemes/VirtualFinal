@@ -11,12 +11,13 @@ public class BeamStatue : MonoBehaviour
     private bool canFire = true;
     [SerializeField] private float fireRate = 1.0f;
     private float fireTimer = 0.0f;
+    [SerializeField] private float rotSpeed = .25f;
     
     private void Update()
     {
         if (shouldRotate)
         {
-            Sphere.transform.Rotate(new Vector3(0.0f, .25f, 0.0f));
+            Sphere.transform.Rotate(new Vector3(0.0f, rotSpeed, 0.0f));
         }
 
         if(!canFire)

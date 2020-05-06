@@ -32,6 +32,7 @@ public class Equipment : MonoBehaviour
     public void MoveToInventory()
     {
         transform.position = m_position;
+        MusicManager.instance.PlayEquipedItem();
     }
 
     public virtual void TriggerAbitily(GameObject i_player)

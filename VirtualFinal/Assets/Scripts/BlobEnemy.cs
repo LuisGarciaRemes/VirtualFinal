@@ -56,11 +56,20 @@ public class BlobEnemy : MonoBehaviour
             direction = new Vector3(direction.x, 0.0f, direction.z);
             other.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
         }
-        if (other.gameObject.CompareTag("Shield"))
+        else if (other.gameObject.CompareTag("Shield"))
         {
-            direction = other.transform.parent.transform.parent.position - transform.position;
-            direction = new Vector3(direction.x, 0.0f, direction.z);
-            other.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
+            if (other.transform.parent.gameObject.CompareTag("Enemy"))
+            {
+                direction = other.transform.parent.position - transform.position;
+                direction = new Vector3(direction.x, 0.0f, direction.z);
+                other.transform.parent.GetComponent<Enemy>().KnockBack(direction.normalized, knockback);
+            }
+            else if (other.transform.parent.transform.parent.gameObject.CompareTag("Player"))
+            {
+                direction = other.transform.parent.transform.parent.position - transform.position;
+                direction = new Vector3(direction.x, 0.0f, direction.z);
+                other.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
+            }
         }
         else if (other.gameObject.CompareTag("Player"))
         {
@@ -72,6 +81,10 @@ public class BlobEnemy : MonoBehaviour
         else if(other.gameObject.CompareTag("Bomb") || other.gameObject.CompareTag("Spikes"))
         {
             Destroy(other.gameObject);
+        }
+        else if (other.gameObject.CompareTag("Box"))
+        {
+            other.gameObject.GetComponent<Box>().DestroyBox();
         }
 
     }

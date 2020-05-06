@@ -46,6 +46,11 @@ public class Spear : MonoBehaviour
             shouldStop = true;
             MusicManager.instance.PlayStrike();
         }
+        else if (other.gameObject.CompareTag("Box"))
+        {
+            shouldStop = true;
+            MusicManager.instance.PlaySpearStick();
+        }
         else if (other.gameObject.CompareTag("Player") && !shouldStop)
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);

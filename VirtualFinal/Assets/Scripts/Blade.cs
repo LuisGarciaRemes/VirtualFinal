@@ -10,7 +10,7 @@ public class Blade : MonoBehaviour
     [SerializeField] private float speed = 5;
     private Vector3 currDestination;
     private bool activated = false;
-    [SerializeField] Blade pair;
+    [SerializeField] GameObject pair;
 
     private void Start()
     {

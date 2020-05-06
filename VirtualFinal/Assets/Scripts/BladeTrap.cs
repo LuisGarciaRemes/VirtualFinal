@@ -8,7 +8,11 @@ public class BladeTrap : Switch
     {
         foreach (GameObject hole in objects)
         {
-            hole.GetComponent<Blade>().Extend();
+            if (hole.CompareTag("Blade"))
+            {
+                hole.GetComponent<Blade>().Extend();
+            }
         }
+        MusicManager.instance.PlayHitSwitch();
     }
 }

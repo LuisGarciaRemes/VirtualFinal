@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentObject: {fileID: 7215165042538921137}
-  range: 8
+  range: 10
 --- !u!1 &5156351114185336176
 GameObject:
   m_ObjectHideFlags: 0

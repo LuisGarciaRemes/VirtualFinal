@@ -163,7 +163,7 @@ public class GameStateManager : MonoBehaviour
 
     public void SpawnHeart(Vector3 position)
     {
-        if (Random.Range(0, 100) < 40)
+        if (Random.Range(0, 100) < 30)
         {
             Instantiate(heartPrefab, position, heartPrefab.transform.rotation);
         }

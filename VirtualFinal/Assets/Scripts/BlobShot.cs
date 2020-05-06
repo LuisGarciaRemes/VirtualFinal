@@ -47,7 +47,14 @@ public class BlobShot : MonoBehaviour
 
         if(collision.gameObject.CompareTag("Shield"))
         {
-            collision.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(-collision.impulse.normalized, knockback);
+            if (collision.transform.parent.gameObject.CompareTag("Enemy"))
+            {
+              
+            }
+            else if (collision.transform.parent.transform.parent.gameObject.CompareTag("Player"))
+            {
+                collision.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(-collision.impulse.normalized, knockback);
+            }
         }
         else if (collision.gameObject.CompareTag("Player"))
         {
@@ -62,6 +69,11 @@ public class BlobShot : MonoBehaviour
         else if (collision.gameObject.CompareTag("Switch"))
         {
             collision.gameObject.GetComponent<Switch>().HitSwitch();
+        }
+        else if (collision.gameObject.CompareTag("Box"))
+        {
+            Vector3 force = collision.gameObject.transform.position - transform.position;
+            gameObject.GetComponent<Rigidbody>().AddForce(-new Vector3(force.x,0.0f,force.z).normalized*speed, ForceMode.Impulse);
         }
     }
 

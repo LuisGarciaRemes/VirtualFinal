@@ -28,6 +28,17 @@ public class Hole : MonoBehaviour
         else if(other.gameObject.CompareTag("Enemy"))
         {
             other.gameObject.GetComponent<Enemy>().Die();
+            MusicManager.instance.PlayFalling();
+        }
+        else if (other.gameObject.CompareTag("Box"))
+        {
+            other.gameObject.GetComponent<Box>().DestroyBox();
+            MusicManager.instance.PlayFalling();
+        }
+        else if (other.gameObject.CompareTag("Bomb"))
+        {
+            Destroy(other.gameObject);
+            MusicManager.instance.PlayFalling();
         }
     }
 

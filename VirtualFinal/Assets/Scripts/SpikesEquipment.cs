@@ -48,18 +48,9 @@ public class SpikesEquipment : Equipment
             Vector3 middleVector = new Vector3();
             Vector3 rightVector = new Vector3();
 
-            if (i_player.GetComponent<PlayerController>().m_rb.velocity == new Vector3())
-            {
-                leftVector = i_player.transform.position + (i_player.transform.forward) * 3 - (i_player.transform.right) * 2f;
-                middleVector = i_player.transform.position + (i_player.transform.forward) * 3;
-                rightVector = i_player.transform.position + (i_player.transform.forward) * 3 + (i_player.transform.right) * 2f;
-            }
-            else
-            {
-                leftVector = i_player.transform.position - (i_player.transform.forward) * 2 - (i_player.transform.right) * 2f;
-                middleVector = i_player.transform.position - (i_player.transform.forward) * 2;
-                rightVector = i_player.transform.position - (i_player.transform.forward) * 2 + (i_player.transform.right) * 2f;
-            }
+            leftVector = i_player.transform.position - (i_player.transform.forward) * 2 - (i_player.transform.right) * 2f;
+            middleVector = i_player.transform.position - (i_player.transform.forward) * 2;
+            rightVector = i_player.transform.position - (i_player.transform.forward) * 2 + (i_player.transform.right) * 2f;
 
             Instantiate(spikes,new Vector3(leftVector.x, i_player.transform.position.y, leftVector.z),spikes.transform.rotation);
             Instantiate(spikes, new Vector3(middleVector.x, i_player.transform.position.y, middleVector.z), spikes.transform.rotation);
