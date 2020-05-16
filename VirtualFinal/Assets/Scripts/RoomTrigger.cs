@@ -26,11 +26,13 @@ public class RoomTrigger : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Enemy"))
         {
+            other.gameObject.GetComponent<Enemy>().roomID = roomID;
+
             if(other.gameObject.GetComponent<HelmetEnemy>())
             {
                 other.gameObject.GetComponent<HelmetEnemy>().AbortHeadbutt();
             }
-            
+
             other.gameObject.GetComponent<Enemy>().MoveAwayFromDoor();
         }
     }

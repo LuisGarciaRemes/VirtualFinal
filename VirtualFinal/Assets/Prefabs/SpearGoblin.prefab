@@ -43,7 +43,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 20
+  m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8309161735007876431
 MonoBehaviour:
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1f0a5f6b1614e48b29fd7093391301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 35
+  maxHealth: 25
   speed: 20
   slowTime: 1
   immuneDelay: 1
@@ -131,7 +131,7 @@ MonoBehaviour:
   min: 0.5
   max: 2
   minDistance: 7
-  maxDistance: 10
+  maxDistance: 15
   rotateSpeed: 10
   spawnLocation: {fileID: 3607797520106918627}
   spearPrefab: {fileID: 7319865177853232097, guid: f60c9a1fad9ec794b936996ac647319f,

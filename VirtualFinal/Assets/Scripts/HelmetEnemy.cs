@@ -50,6 +50,7 @@ public class HelmetEnemy : Enemy
                     if ((transform.rotation.eulerAngles.y <= yRot + 2.0f || transform.rotation.eulerAngles.y >= yRot - 2.0f) && (direction.magnitude <= maxDistance))
                     {
                         Heabutt(headPlate.transform.forward,minDistance*2);
+                        MusicManager.instance.PlayDash();
                         canHeadbutt = false;
                     }
 

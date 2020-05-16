@@ -81,6 +81,7 @@ public class Box : MonoBehaviour
             }
             else if (collision.gameObject.CompareTag("Enemy"))
             {
+                Debug.Log("yup");
                 collision.gameObject.GetComponent<Enemy>().TakeDamage(10);
                 DestroyBox();
             }

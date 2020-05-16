@@ -19,6 +19,7 @@ public class Stairs : MonoBehaviour
             canUse = false;
             exit.GetComponent<Stairs>().player = other.gameObject;
             other.gameObject.GetComponent<PlayerController>().isDashing = false;
+            other.gameObject.GetComponent<PlayerController>().roomID = GameStateManager.instance.listOfRooms.IndexOf(room);
 
             if (up)
             {

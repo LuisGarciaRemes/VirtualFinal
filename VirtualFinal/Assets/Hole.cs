@@ -25,20 +25,30 @@ public class Hole : MonoBehaviour
                 MusicManager.instance.PlayFalling();
             }
         }
-        else if(other.gameObject.CompareTag("Enemy"))
+        else if(other.gameObject.CompareTag("Enemy") && !other.gameObject.GetComponent<Enemy>().isKnockedBack)
         {
             other.gameObject.GetComponent<Enemy>().Die();
             MusicManager.instance.PlayFalling();
         }
-        else if (other.gameObject.CompareTag("Box"))
+        else if (other.gameObject.CompareTag("Box") && other.gameObject.GetComponent<Box>().pickUpObject.thrown)
         {
-            other.gameObject.GetComponent<Box>().DestroyBox();
-            MusicManager.instance.PlayFalling();
+            other.gameObject.GetComponent<Box>().pickUpObject.overHole = true;
         }
-        else if (other.gameObject.CompareTag("Bomb"))
+        else if (other.gameObject.CompareTag("Bomb") && other.gameObject.GetComponentInChildren<PickUpObject>().thrown)
         {
-            Destroy(other.gameObject);
-            MusicManager.instance.PlayFalling();
+            other.gameObject.GetComponentInChildren<PickUpObject>().overHole = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Box") && other.gameObject.GetComponent<Box>().pickUpObject.thrown)
+        {
+            other.gameObject.GetComponent<Box>().pickUpObject.overHole = false;
+        }
+        else if (other.gameObject.CompareTag("Bomb") && other.gameObject.GetComponentInChildren<PickUpObject>().thrown)
+        {
+            other.gameObject.GetComponentInChildren<PickUpObject>().overHole = false;
         }
     }
 

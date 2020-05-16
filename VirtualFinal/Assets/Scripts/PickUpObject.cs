@@ -10,8 +10,9 @@ public class PickUpObject : MonoBehaviour
     private float ogRange;    
     internal bool thrown = false;
     Vector3 pos = new Vector3();
-    private float yOG;
+    internal float yOG;
     Vector3 bounceOffset;
+    internal bool overHole = false;
 
     private void Start()
     {
@@ -110,13 +111,25 @@ public class PickUpObject : MonoBehaviour
                     thrown = false;
                     Heldby = null;
                     range = ogRange;
-                    transform.parent.gameObject.GetComponent<Box>().DestroyBox();
+                        transform.parent.gameObject.GetComponent<Box>().DestroyBox();
+                    if (overHole)
+                    {
+                        MusicManager.instance.PlayFalling();
+                    }
                 }
                 else 
                 {
                     thrown = false;
                     Heldby = null;
-                    MusicManager.instance.PlayThud();
+                    if (overHole)
+                    {
+                        MusicManager.instance.PlayFalling();
+                        Destroy(this.transform.parent.gameObject);
+                    }
+                    else
+                    {
+                        MusicManager.instance.PlayThud();
+                    }
                     range = ogRange;
                 }
             }

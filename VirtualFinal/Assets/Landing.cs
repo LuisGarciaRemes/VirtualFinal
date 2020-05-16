@@ -17,6 +17,12 @@ public class Landing : MonoBehaviour
             other.gameObject.GetComponent<PlayerController>().TakeDamage(5);
             MusicManager.instance.PlayThud();
             other.gameObject.GetComponent<PlayerController>().roomID = GameStateManager.instance.listOfRooms.IndexOf(room);
-        }
+
+            if (other.gameObject.GetComponentInChildren<PickUpObject>())
+            {
+                Debug.Log("yup");
+                other.gameObject.GetComponentInChildren<PickUpObject>().yOG = transform.parent.GetComponent<Hole>().landingLevel * 50 + 1.0f;
+            }
+        }       
     }
 }

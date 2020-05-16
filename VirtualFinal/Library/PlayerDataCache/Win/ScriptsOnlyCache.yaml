@@ -38,7 +38,6 @@ ScriptsOnlyBuild:
     - Sword
     Unity.InputSystem.dll:
     - UnityEngine.InputSystem.Editor.InputActionEditorWindow
-    - UnityEngine.InputSystem.Editor.PlayerInputEditor
     - UnityEngine.InputSystem.InputActionAsset
     - UnityEngine.InputSystem.InputActionReference
     - UnityEngine.InputSystem.InputSettings
@@ -870,7 +869,7 @@ ScriptsOnlyBuild:
     className: RoomTrigger
   - hash:
       serializedVersion: 2
-      Hash: 4073025b27b60efdbff60689a1b9521a
+      Hash: 0f81cdd240ff35764bc5ab255134c624
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BlobEnemy

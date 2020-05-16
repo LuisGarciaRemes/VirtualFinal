@@ -50,6 +50,7 @@ public class Enemy : MonoBehaviour
     internal float yRot;
     [SerializeField] internal float rotateSpeed = 10;
     internal bool stopRotating = false;
+    private Vector3 ogPos;
 
     public void Start()
     {
@@ -63,6 +64,7 @@ public class Enemy : MonoBehaviour
         }
 
         navMeshAgent.speed = speed;
+        ogPos = transform.position;
     }
 
     public void Update()
@@ -232,7 +234,7 @@ public class Enemy : MonoBehaviour
 
     public void Revive()
     {
-        transform.position -= transform.up*distanceToHeaven;
+        transform.position = ogPos;
         isDead = false;
         currHealth = maxHealth;
         navMeshAgent.enabled = true;

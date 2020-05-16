@@ -176,6 +176,13 @@ public class PlayerController : MonoBehaviour
 
         CheckHealth();
 
+        if(isFalling && isImmune)
+        {
+            gameObject.GetComponent<MeshRenderer>().enabled = true;
+            isImmune = false;
+            immuneTick = 0;
+        }
+
     }
 
     private void OnMove(InputValue value)

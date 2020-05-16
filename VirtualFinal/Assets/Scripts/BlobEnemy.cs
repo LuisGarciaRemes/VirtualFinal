@@ -4,57 +4,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BlobEnemy : MonoBehaviour
+public class BlobEnemy : Enemy
 {
     [SerializeField] private int damage = 5;
     [SerializeField] private float knockback = 3;
-    [SerializeField] private float min = 0.5f;
-    [SerializeField] private float max = 2.0f;
-    NavMeshAgent navMeshAgent = null;
-    private float wanderTimer = 0.0f;
-    private float wanderDelay = 0.0f;
     [SerializeField] private GameObject splat;
 
-    // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-
-        if(navMeshAgent == null)
-        {
-            Debug.LogError("BlobEnemy does not have navmeshagent");
-        }
+        base.Start();
     }
 
-    // Update is called once per frame
-    void Update()
+    new void Update()
     {
-        if(wanderTimer >= wanderDelay)
-        {
-            wanderTimer = 0.0f;
-            wanderDelay = UnityEngine.Random.Range(min,max);
-            navMeshAgent.SetDestination(RandomNavSphere(transform.position,10.0f,-1));
-            Instantiate(splat, transform.position, splat.transform.rotation);
-        }
-        else
-        {
-            wanderTimer += Time.deltaTime;
-        }
+        base.Update();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Vector3 direction;
-        if (!other.gameObject.CompareTag("Wall"))
-        {
-            MusicManager.instance.PlayBlobBounce();
-        }
 
         if (other.gameObject.CompareTag("Sword"))
         {
             direction = other.transform.parent.transform.parent.position - transform.position;
             direction = new Vector3(direction.x, 0.0f, direction.z);
             other.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
+            MusicManager.instance.PlayBlobBounce();
         }
         else if (other.gameObject.CompareTag("Shield"))
         {
@@ -63,12 +38,14 @@ public class BlobEnemy : MonoBehaviour
                 direction = other.transform.parent.position - transform.position;
                 direction = new Vector3(direction.x, 0.0f, direction.z);
                 other.transform.parent.GetComponent<Enemy>().KnockBack(direction.normalized, knockback);
+                MusicManager.instance.PlayBlobBounce();
             }
             else if (other.transform.parent.transform.parent.gameObject.CompareTag("Player"))
             {
                 direction = other.transform.parent.transform.parent.position - transform.position;
                 direction = new Vector3(direction.x, 0.0f, direction.z);
                 other.transform.parent.transform.parent.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
+                MusicManager.instance.PlayBlobBounce();
             }
         }
         else if (other.gameObject.CompareTag("Player"))
@@ -77,13 +54,16 @@ public class BlobEnemy : MonoBehaviour
             direction = new Vector3(direction.x, 0.0f, direction.z);
             other.gameObject.GetComponent<PlayerController>().KnockBack(direction.normalized, knockback);
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            MusicManager.instance.PlayBlobBounce();
         }
         else if(other.gameObject.CompareTag("Bomb") || other.gameObject.CompareTag("Spikes"))
         {
+            MusicManager.instance.PlayBlobBounce();
             Destroy(other.gameObject);
         }
         else if (other.gameObject.CompareTag("Box"))
         {
+            MusicManager.instance.PlayBlobBounce();
             other.gameObject.GetComponent<Box>().DestroyBox();
         }
 
@@ -95,19 +75,6 @@ public class BlobEnemy : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
         }
-    }
-
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
-    {
-        Vector3 randDirection = UnityEngine.Random.insideUnitSphere * dist;
-
-        randDirection += origin;
-
-        NavMeshHit navHit;
-
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
-
-        return navHit.position;
     }
 
 }

@@ -44,6 +44,10 @@ public class Blade : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(10);
         }
+        else if(other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.GetComponent<Enemy>().TakeDamage(10);
+        }
     }
 
     private void Retract()
