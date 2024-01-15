@@ -436,7 +436,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isImmune)
         {
-            health -= i_damage;
+            //health -= i_damage;
             BecomeImmune();
             UpdateHealthIndicator();
             MusicManager.instance.PlayDamagedPlayer();

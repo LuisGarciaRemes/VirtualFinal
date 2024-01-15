@@ -27,11 +27,16 @@ public class Fireball : MonoBehaviour
             MusicManager.instance.PlayFireballHit();
             Destroy(this.gameObject);
         }
+        else if (other.gameObject.CompareTag("Shield"))
+        {
+            MusicManager.instance.PlayFireballHit();
+            Destroy(this.gameObject);
+        }   
         else if (other.gameObject.CompareTag("Player"))
         {
             MusicManager.instance.PlayFireballHit();
             other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
             Destroy(this.gameObject);
-        }      
+        }
     }
 }
